@@ -10,9 +10,18 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  Tray,
+  Menu,
+  nativeImage,
+  globalShortcut
+} from 'electron';
 import { autoUpdater } from 'electron-updater';
+import path from 'path';
 import log from 'electron-log';
+import os from 'os';
 import MenuBuilder from './menu';
 
 export default class AppUpdater {
@@ -24,6 +33,17 @@ export default class AppUpdater {
 }
 
 let mainWindow = null;
+let tray = null;
+const iconPath = path.join(__dirname, '..', 'resources', 'icons', '16x16.png');
+const iconPath8x = path.join(
+  __dirname,
+  '..',
+  'resources',
+  'icons',
+  '128x128.png'
+);
+const DARWIN = os.platform() === 'darwin';
+const WIN32 = os.platform() !== 'darwin' && os.platform() !== 'linux2';
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -67,34 +87,123 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-  mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728
-  });
+  /**
+   * 创建窗口
+   */
+  (function createWindow() {
+    mainWindow = new BrowserWindow({
+      show: false,
+      frame: false,
+      width: 1024,
+      height: 728
+    });
 
-  mainWindow.loadURL(`file://${__dirname}/app.html`);
+    mainWindow.loadURL(`file://${__dirname}/app.html`);
 
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  mainWindow.webContents.on('did-finish-load', () => {
-    if (!mainWindow) {
-      throw new Error('"mainWindow" is not defined');
-    }
-    if (process.env.START_MINIMIZED) {
-      mainWindow.minimize();
-    } else {
+    // @TODO: Use 'ready-to-show' event
+    //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
+    mainWindow.webContents.on('did-finish-load', () => {
+      if (!mainWindow) {
+        throw new Error('"mainWindow" is not defined');
+      }
+      if (process.env.START_MINIMIZED) {
+        mainWindow.minimize();
+      } else {
+        mainWindow.show();
+        mainWindow.focus();
+      }
+    });
+
+    const menuBuilder = new MenuBuilder(mainWindow);
+    menuBuilder.buildMenu();
+
+    /**
+     * 窗口事件
+     */
+    (function events() {})();
+  })();
+
+  /**
+   * 托盘对象
+   */
+  (function appTray() {
+    const image = nativeImage.createFromPath(iconPath);
+    tray = new Tray(image);
+    tray.on('double-click', () => {
       mainWindow.show();
-      mainWindow.focus();
+      if (DARWIN) {
+        app.dock.show();
+      }
+      if (WIN32) {
+        const menuBuilder = new MenuBuilder(mainWindow);
+        menuBuilder.buildMenu();
+      }
+    });
+    tray.on('right-click', () => {
+      const trayMenu = [
+        {
+          label: '打开',
+          click() {
+            mainWindow.show();
+          }
+        },
+        {
+          label: '退出',
+          click() {
+            app.quit();
+          }
+        }
+      ];
+      // 图标的上下文菜单
+      const contextMenu = Menu.buildFromTemplate(trayMenu);
+      tray.popUpContextMenu(contextMenu);
+    });
+    tray.setToolTip('EnvoPlayer');
+  })();
+
+  /**
+   * 快捷键
+   */
+  (function defineShortcut() {
+    /**
+     * Mac平台
+     */
+    (function mac() {
+      if (DARWIN) {
+        globalShortcut.register('Command+W', () => {
+          mainWindow.hide();
+          app.dock.hide();
+        });
+        globalShortcut.register('Command+Q', () => {
+          app.quit();
+        });
+      }
+    })();
+
+    /**
+     * Windows平台
+     */
+    (function windows() {
+      if (WIN32) {
+        globalShortcut.register('Control+F4', () => {
+          mainWindow.hide();
+          Menu.setApplicationMenu(null);
+        });
+      }
+    })();
+  })();
+
+  /**
+   * Dock/TaskBar 图标
+   */
+  (function taskBar() {
+    if (DARWIN) {
+      app.dock.setIcon(iconPath8x);
     }
-  });
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
-
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+    if (WIN32) {
+      mainWindow.setOverlayIcon(iconPath8x);
+    }
+  })();
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
