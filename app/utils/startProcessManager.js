@@ -143,9 +143,13 @@ export default class StartProcessManager {
     );
     this._updateUI(false, '初始化完成');
     this._updateCfg(setting.playerVolumn);
-    if (
-      this._musicSchedule._playlistManager.getCurrentPlaylist().length === 0
-    ) {
+
+    const currentPlaylist = this._musicSchedule._playlistManager.getCurrentPlaylist();
+    if (!currentPlaylist) {
+      setTimeout(this.run.bind(this), 5000);
+    }
+
+    if (currentPlaylist.length === 0) {
       const firstPatchSongs = res.cPlaylists.map(pl => pl.tracks.unCached[0]);
       console.info('第一批歌曲 ', firstPatchSongs);
       const dm = new DownloadManager();
