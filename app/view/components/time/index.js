@@ -1,3 +1,4 @@
+// @flow
 /* eslint-disable no-param-reassign,react/prop-types,class-methods-use-this,react/default-props-match-prop-types */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';

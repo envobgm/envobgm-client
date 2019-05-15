@@ -1,3 +1,4 @@
+// @flow
 /* eslint-disable react/destructuring-assignment,react/jsx-no-comment-textnodes,no-underscore-dangle,react/no-unused-state */
 import React, { Component } from 'react';
 import { Icon } from 'antd';
