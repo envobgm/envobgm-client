@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle,no-plusplus,no-return-assign,eqeqeq,no-restricted-syntax,no-param-reassign,class-methods-use-this */
+/* eslint-disable no-underscore-dangle,no-plusplus,no-return-assign,eqeqeq,no-restricted-syntax,no-param-reassign,class-methods-use-this,func-names */
 import { Howl } from 'howler';
 import Debug from 'debug';
 import moment from 'moment';
@@ -145,17 +145,16 @@ class PlaylistManager extends MusicManager {
       return music;
     })(this._currentMusic, { ...currPlaylist[this._currentIndex] });
     if (this._currentMusic && !this._currentMusic.howl) {
-      debug('localFilePath : %o', this._currentMusic.filePathName);
       this._currentMusic.howl = new Howl({
         src: [this._currentMusic.filePathName],
         autoplay: false,
-        html5: true,
         onload: this._onLoad.bind(this),
         onplay: this._onPlay.bind(this),
         onend: this._onEnd.bind(this),
         onpause: this._onPause.bind(this),
         onstop: this._onStop.bind(this)
       });
+      debug('创建howl实例：', this._currentMusic.howl);
     }
     return this._currentMusic;
   }
@@ -201,6 +200,7 @@ class PlaylistManager extends MusicManager {
     if (!this._isLoading && music && music.howl && !music.howl.playing()) {
       this._isLoading = true;
       const id = music.howl.play();
+      debug('开始播放：', music.howl);
       music.howl.fade(0, 1, this._setting.fadeInTm, id);
     }
     this._isPause = false;

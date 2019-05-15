@@ -134,7 +134,6 @@ class MusicSchedule extends EventEmitter {
   start(i) {
     debug('start setInterval');
     const interval = i >= 100 && i <= 2000 ? i : 1000;
-    // 保证_run的执行在1s内不会超过一次
     this._timeId = setInterval(this._run.bind(this), interval);
   }
 

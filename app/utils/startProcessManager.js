@@ -13,6 +13,7 @@ import DownloadManager from './downloadManager';
 import MusicSchedule from './musicSchedule';
 import doJob from '../download/downloadJob';
 
+// const debug = require('debug')('startProcessManager');
 const path = require('path');
 const os = require('os');
 const Datastore = require('nedb');

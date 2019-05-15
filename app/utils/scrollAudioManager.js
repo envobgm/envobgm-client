@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle,no-undef */
 import Debug from 'debug';
+import { Howl } from 'howler';
 import MusicManager from './musicManager';
 
 const debug = Debug('ScrollAudioManager');
