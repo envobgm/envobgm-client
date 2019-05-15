@@ -11,7 +11,7 @@ import {
 import nedb from './db';
 import DownloadManager from './downloadManager';
 import MusicSchedule from './musicSchedule';
-import doJob from '../download/downloadJob';
+import doJob from './downloadJob';
 
 // const debug = require('debug')('startProcessManager');
 const path = require('path');

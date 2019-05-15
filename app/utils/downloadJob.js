@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-expressions,no-shadow,no-plusplus */
 import Debug from 'debug';
-import DownloadManager from '../utils/downloadManager';
-import nedb from '../utils/db';
-import { checkPlaylist } from '../api';
+import DownloadManager from './downloadManager';
+import nedb from './db';
+import { checkPlaylist } from '../api/index';
 
 const debug = Debug('downloadJob');
 
