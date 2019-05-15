@@ -16,7 +16,8 @@ import {
   Tray,
   Menu,
   nativeImage,
-  globalShortcut
+  globalShortcut,
+  ipcMain
 } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
@@ -170,10 +171,10 @@ app.on('ready', async () => {
      */
     (function mac() {
       if (DARWIN) {
-        globalShortcut.register('Command+W', () => {
-          mainWindow.hide();
-          app.dock.hide();
-        });
+        // globalShortcut.register('Command+W', () => {
+        //   mainWindow.hide();
+        //   app.dock.hide();
+        // });
         globalShortcut.register('Command+Q', () => {
           app.quit();
         });
@@ -203,6 +204,29 @@ app.on('ready', async () => {
     if (WIN32) {
       mainWindow.setOverlayIcon(iconPath8x);
     }
+  })();
+
+  /**
+   * 调用IPC进程
+   */
+  (function invokeIpcProcess() {
+    ipcMain.on('hide', () => mainWindow.minimize());
+    ipcMain.on('close', event => {
+      mainWindow.hide();
+      if (os.platform() === 'darwin') {
+        app.dock.hide();
+      } else {
+        Menu.setApplicationMenu(null);
+      }
+      event.preventDefault();
+    });
+    ipcMain.on('resize', (event, w, h) => {
+      mainWindow.setMinimumSize(w, h);
+      mainWindow.setMaximumSize(w, h);
+      mainWindow.setSize(w, h);
+      mainWindow.center();
+    });
+    ipcMain.on('maximize', () => mainWindow.maximize());
   })();
 
   // Remove this if your app does not use auto updates
