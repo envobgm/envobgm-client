@@ -20,7 +20,7 @@ cust.macAddr = async () =>
         if (error) {
           reject(stderr);
         }
-        resolve(macRegExp.test(stdout)[0]);
+        resolve(stdout.match(macRegExp)[0]);
       });
     }
     // Windows
@@ -29,7 +29,7 @@ cust.macAddr = async () =>
         if (error) {
           reject(stderr);
         }
-        resolve(macRegExp.test(stdout)[0]);
+        resolve(stdout.match(macRegExp)[0]);
       });
     }
   });

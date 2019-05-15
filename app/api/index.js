@@ -7,11 +7,11 @@ import fs from 'fs';
 
 import DownloadManager from '../utils/downloadManager';
 import nedb from '../utils/db';
+import OssClient from '../utils/ossClient';
 
 const dbPath = path.join(os.homedir(), '.bgm', 'player.db');
 const debug = new Debug('api');
 const getMacAddr = require('../utils/cust').macAddr;
-const OssClient = require('../utils/ossClient');
 const { history } = require('../store/configureStore');
 
 let baseUrl;

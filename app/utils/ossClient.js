@@ -2,7 +2,7 @@
 // TODO：水货alioss经过webpack以后会有问题，只好在网页里面加载好
 const OSS = require('ali-oss');
 // const OSS = require('ali-oss');
-const Client = OSS.Wrapper;
+const Client = OSS;
 
 /**
  * @class OssClient
