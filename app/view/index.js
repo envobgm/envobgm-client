@@ -200,14 +200,14 @@ export default class Home extends Component {
           </section>
           <div className={ep.profile} style={dragRegionStyle}>
             <div className={ep.currentInfo}>
-              <p>{this.state.brand}</p>
-              <p>{this.state.branchStore}</p>
+              {/* <p>{this.state.brand}</p> */}
+              {/* <p>{this.state.branchStore}</p> */}
             </div>
             <img src={logo} className={ep.logo} alt="logo" />
             <div className={ep.currentInfo}>
-              <p>{this.state.currentPlaylist}</p>
-              <p>{this.state.currentArtist}</p>
-              <p>{this.state.currentSong}</p>
+              {/* <p>{this.state.currentPlaylist}</p> */}
+              {/* <p>{this.state.currentArtist}</p> */}
+              {/* <p>{this.state.currentSong}</p> */}
             </div>
           </div>
         </header>
