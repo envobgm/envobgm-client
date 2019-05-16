@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions,prettier/prettier */
 /* eslint global-require: off */
 
 /**
@@ -13,17 +14,19 @@
 import {
   app,
   BrowserWindow,
-  Tray,
+  globalShortcut,
+  ipcMain,
   Menu,
   nativeImage,
-  globalShortcut,
-  ipcMain
+  Tray
 } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import log from 'electron-log';
 import os from 'os';
 import MenuBuilder from './menu';
+import ipcs from './constants/ipcs';
+import tray from './constants/tray';
 
 export default class AppUpdater {
   constructor() {
@@ -34,7 +37,7 @@ export default class AppUpdater {
 }
 
 let mainWindow = null;
-let tray = null;
+let appTray = null;
 const iconPath = path.join(__dirname, '..', 'resources', 'icons', '16x16.png');
 const iconPath8x = path.join(
   __dirname,
@@ -121,76 +124,76 @@ app.on('ready', async () => {
     /**
      * 窗口事件
      */
-    (function events() {})();
+    (function events() {
+    })();
   })();
 
   /**
    * 托盘对象
    */
-  (function appTray() {
+  (function makeTray() {
     const image = nativeImage.createFromPath(iconPath);
-    tray = new Tray(image);
-    tray.on('double-click', () => {
-      mainWindow.show();
-      if (DARWIN) {
-        app.dock.show();
-      }
-      if (WIN32) {
-        const menuBuilder = new MenuBuilder(mainWindow);
-        menuBuilder.buildMenu();
-      }
-    });
-    tray.on('right-click', () => {
-      const trayMenu = [
-        {
-          label: '打开',
-          click() {
-            mainWindow.show();
-          }
-        },
-        {
-          label: '退出',
-          click() {
-            app.quit();
-          }
+    appTray = new Tray(image);
+    appTray.setToolTip('EnvoPlayer');
+
+    /**
+     * 注册托盘事件
+     */
+    (function registerEvents() {
+      appTray.on(tray.DOUBLE_CLICK, () => {
+        mainWindow.show();
+        if (DARWIN) {
+          app.dock.show();
         }
-      ];
-      // 图标的上下文菜单
-      const contextMenu = Menu.buildFromTemplate(trayMenu);
-      tray.popUpContextMenu(contextMenu);
-    });
-    tray.setToolTip('EnvoPlayer');
+        if (WIN32) {
+          const menuBuilder = new MenuBuilder(mainWindow);
+          menuBuilder.buildMenu();
+        }
+      });
+      appTray.on(tray.RIGHT_CLICK, () => {
+        const trayMenu = [
+          {
+            label: '打开',
+            click() {
+              mainWindow.show();
+              if (DARWIN) {
+                app.dock.show();
+              }
+              if (WIN32) {
+                const menuBuilder = new MenuBuilder(mainWindow);
+                menuBuilder.buildMenu();
+              }
+            }
+          },
+          {
+            label: '退出',
+            click() {
+              app.quit();
+            }
+          }
+        ];
+        // 图标的上下文菜单
+        const contextMenu = Menu.buildFromTemplate(trayMenu);
+        appTray.popUpContextMenu(contextMenu);
+      });
+    })();
   })();
 
   /**
    * 快捷键
    */
   (function defineShortcut() {
-    /**
-     * Mac平台
-     */
     (function mac() {
-      if (DARWIN) {
-        // globalShortcut.register('Command+W', () => {
-        //   mainWindow.hide();
-        //   app.dock.hide();
-        // });
-        globalShortcut.register('Command+Q', () => {
-          app.quit();
-        });
-      }
-    })();
-
-    /**
-     * Windows平台
-     */
-    (function windows() {
-      if (WIN32) {
-        globalShortcut.register('Control+F4', () => {
-          mainWindow.hide();
-          Menu.setApplicationMenu(null);
-        });
-      }
+      globalShortcut.register('CommandOrControl+3', () => {
+        mainWindow.show();
+        if (DARWIN) {
+          app.dock.show();
+        }
+        if (WIN32) {
+          const menuBuilder = new MenuBuilder(mainWindow);
+          menuBuilder.buildMenu();
+        }
+      });
     })();
   })();
 
@@ -210,23 +213,23 @@ app.on('ready', async () => {
    * 调用IPC进程
    */
   (function invokeIpcProcess() {
-    ipcMain.on('hide', () => mainWindow.minimize());
-    ipcMain.on('close', event => {
-      mainWindow.hide();
-      if (os.platform() === 'darwin') {
-        app.dock.hide();
-      } else {
-        Menu.setApplicationMenu(null);
-      }
+    // 关闭窗口
+    ipcMain.on(ipcs.CLOSE, event => {
       event.preventDefault();
+      mainWindow.hide();
+      DARWIN ? app.dock.hide() : Menu.setApplicationMenu(null);
     });
-    ipcMain.on('resize', (event, w, h) => {
+    // 重置窗口大小
+    ipcMain.on(ipcs.RESIZE, (event, w, h) => {
       mainWindow.setMinimumSize(w, h);
       mainWindow.setMaximumSize(w, h);
       mainWindow.setSize(w, h);
       mainWindow.center();
     });
-    ipcMain.on('maximize', () => mainWindow.maximize());
+    // 窗口最小化
+    ipcMain.on(ipcs.HIDE, mainWindow.minimize.bind(this));
+    // 窗口最大化
+    ipcMain.on(ipcs.MAXIMIZE, mainWindow.maximize.bind(this));
   })();
 
   // Remove this if your app does not use auto updates

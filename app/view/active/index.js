@@ -1,14 +1,13 @@
-/* eslint-disable no-shadow,no-underscore-dangle,react/no-unused-state,no-plusplus,react/destructuring-assignment,react/prop-types,no-unused-vars */
 import React, { Component } from 'react';
 import { Alert, Button, Input, Row, Spin, Steps } from 'antd';
 import { ipcRenderer } from 'electron';
-import Debug from 'debug';
 import cust from '../../utils/cust';
 import st from './index.css';
 import GetDB from '../../utils/db';
 import { active } from '../../api';
+import { history } from '../../store/configureStore';
 
-const debug = Debug('active');
+// const debug = require('debug')('active');
 
 const { Step } = Steps;
 
@@ -24,40 +23,34 @@ const steps = [
   }
 ];
 
-class ActivePage extends Component {
+type Props = {};
+
+export default class ActivePage extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
       current: 0,
-      canNext: true,
       loading: false,
       title: '激活客户端',
       content: '客户端和机器是一起绑定激活的，换机器需要重新激活'
     };
-    this._activeCode = null;
-    this._dlDone = this.props.location.state
-      ? this.props.location.state.dlDone
-      : 0;
-    this._dlState = this.props.location.state
-      ? this.props.location.state.dlState
-      : true;
-    this._userAgent = navigator.userAgent.toLowerCase();
-    this._wait = cust.wait;
+    this.activeCode = null;
+    this.wait = cust.wait;
     ipcRenderer.send('resize', 700, 500);
   }
 
   // 进行每一步的操作
   async next(auto = false) {
     const { current } = this.state;
-    if (current === 0 && this._activeCode) {
+    if (current === 0 && this.activeCode) {
       try {
         const ac = await this.active(auto);
         if (!ac) return;
-        this._wait(() => {
-          this.props.history.push('/');
+        this.wait(() => {
+          history.push('/');
         });
       } catch (err) {
-        this._wait(() => window.location.reload());
+        this.wait(() => window.location.reload());
         this.setState({
           title: '该激活码已过期，请联系供应商重新获取。',
           content: JSON.stringify(err)
@@ -71,7 +64,7 @@ class ActivePage extends Component {
 
     // 激活过就不用再激活了
     if (auto) {
-      current++;
+      current += 1;
       this.setState({
         current,
         title: steps[current].title,
@@ -82,11 +75,11 @@ class ActivePage extends Component {
 
     let ret = true;
     // 远程激活
-    this.setState({ canNext: false, loading: true });
+    this.setState({ loading: true });
     try {
-      ret = await active(this._activeCode);
+      ret = await active(this.activeCode);
       // 手动进入，需要保存code
-      GetDB().insert({ activeCode: this._activeCode });
+      GetDB().insert({ activeCode: this.activeCode });
     } catch (err) {
       // 清除激活碼
       GetDB().remove({}, { multi: true });
@@ -94,7 +87,7 @@ class ActivePage extends Component {
       throw err;
     }
     if (ret) {
-      current++;
+      current += 1;
       this.setState({
         current,
         title: steps[current].title,
@@ -106,20 +99,20 @@ class ActivePage extends Component {
         title: steps[current].title,
         content: steps[current].fail
       });
-      this.setState({ canNext: true, loading: false });
+      this.setState({ loading: false });
     }
     return ret;
   }
 
   onChangeActiveCode = e => {
-    this._activeCode = e.target.value;
+    this.activeCode = e.target.value;
   };
 
   // https://ant.design/components/steps-cn/
   render() {
-    const { current } = this.state;
+    const { current, loading, title, content } = this.state;
 
-    const active = (
+    const activeUI = (
       <div>
         <div className={st.stepsContent}>
           <Row
@@ -128,17 +121,13 @@ class ActivePage extends Component {
             align="middle"
             className={st.stepsContent}
           >
-            <Spin spinning={this.state.loading}>
-              <Alert
-                message={this.state.title}
-                description={this.state.content}
-                type="info"
-              />
+            <Spin spinning={loading}>
+              <Alert message={title} description={content} type="info" />
             </Spin>
           </Row>
           <div className="steps-action">
             <div>
-              {this.state.current === 0 && !this.state.loading && (
+              {current === 0 && !loading && (
                 <Row type="flex" justify="center" align="middle">
                   <Input
                     placeholder="请输入激活码"
@@ -163,10 +152,8 @@ class ActivePage extends Component {
             <Step key={item.title} title={item.title} />
           ))}
         </Steps>
-        {active}
+        {activeUI}
       </div>
     );
   }
 }
-
-export default ActivePage;

@@ -241,6 +241,7 @@
     "rimraf": "^2.6.3",
     "sass-loader": "^7.1.0",
     "sinon": "^7.3.2",
+    "source-map-support": "^0.5.11",
     "spectron": "^5.0.0",
     "style-loader": "^0.23.1",
     "stylelint": "^9.10.1",
@@ -257,8 +258,7 @@
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.2.1",
     "webpack-merge": "^4.2.1",
-    "yarn": "^1.15.2",
-    "source-map-support": "^0.5.11"
+    "yarn": "^1.15.2"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.8.1",

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 // @flow
 import { app, Menu, shell, BrowserWindow } from 'electron';
 
@@ -137,7 +138,14 @@ export default class MenuBuilder {
           accelerator: 'Command+M',
           selector: 'performMiniaturize:'
         },
-        { label: 'Close', accelerator: 'Command+W', selector: 'performClose:' },
+        {
+          label: 'Close',
+          accelerator: 'Command+W',
+          click: () => {
+            this.mainWindow.hide();
+            app.dock.hide();
+          }
+        },
         { type: 'separator' },
         { label: 'Bring All to Front', selector: 'arrangeInFront:' }
       ]
@@ -193,7 +201,8 @@ export default class MenuBuilder {
             label: '&Close',
             accelerator: 'Ctrl+W',
             click: () => {
-              this.mainWindow.close();
+              this.mainWindow.hide();
+              Menu.setApplicationMenu(null);
             }
           }
         ]
