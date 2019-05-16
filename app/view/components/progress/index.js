@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Progress } from 'antd';
+import { Progress as AntdProgress } from 'antd';
 import pp from './index.css';
 
 // 进度条
-const ProgressX = ({ process }) => (
+const Progress = ({ process }) => (
   <div className={pp.Progress}>
-    <Progress
+    <AntdProgress
       defaultValue={0}
       status="active"
       percent={process}
@@ -16,12 +16,12 @@ const ProgressX = ({ process }) => (
   </div>
 );
 
-ProgressX.defaultProps = {
-  process: 0
-};
-
-ProgressX.propTypes = {
+Progress.propTypes = {
   process: PropTypes.number
 };
 
-export default ProgressX;
+Progress.defaultProps = {
+  process: 0
+};
+
+export default Progress;

@@ -55,8 +55,8 @@ export default class Home extends Component {
       currentSong: 'Unknown Song', // 当前歌曲
       open: true,
       process: 0,
-      duration: null,
-      seek: null,
+      duration: 0,
+      seek: 0,
       volume: 0,
       loading: false,
       loadingText: '检查更新'
@@ -123,6 +123,16 @@ export default class Home extends Component {
   };
 
   render() {
+    let { seek, duration, process } = this.state;
+    /**
+     * 还不知道啥原因，howl返回的类型不对
+     */
+    (function parseNumber() {
+      if (typeof seek !== 'number') seek = 0;
+      if (typeof duration !== 'number') duration = 0;
+      if (typeof process !== 'number') process = 0;
+    })();
+
     return (
       <div className={ep.container}>
         <header className={ep.albumart}>
@@ -213,9 +223,9 @@ export default class Home extends Component {
         </header>
         <section className={ep.ctrlWrapper}>
           <div className={ep.controls}>
-            <Time secs={this.state.seek} />
-            <Progress process={this.state.process} />
-            <Time secs={this.state.duration} />
+            <Time secs={seek} />
+            <Progress process={process} />
+            <Time secs={duration} />
             <Volume volume={this.state.volume} onChange={this.onVolume} />
             <Switch open={this.state.open} onSwitch={this.onSwitch} />
           </div>

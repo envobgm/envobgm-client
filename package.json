@@ -257,7 +257,8 @@
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.2.1",
     "webpack-merge": "^4.2.1",
-    "yarn": "^1.15.2"
+    "yarn": "^1.15.2",
+    "source-map-support": "^0.5.11"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.8.1",
@@ -284,8 +285,7 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0",
-    "source-map-support": "^0.5.11"
+    "redux-thunk": "^2.3.0"
   },
   "devEngines": {
     "node": ">=7.x",

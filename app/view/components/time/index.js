@@ -1,19 +1,16 @@
 // @flow
-/* eslint-disable no-param-reassign,react/prop-types,class-methods-use-this,react/default-props-match-prop-types */
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import pp from './index.css';
 
-// 播放计时
-class Index extends Component {
-  toTimeString(secs) {
-    if (typeof secs !== 'number') {
-      secs = 0;
-    }
+// const debug = require('debug')('time');
 
-    secs = Math.round(secs);
-    const minutes = Math.floor(secs / 60) || 0;
-    const seconds = secs - minutes * 60 || 0;
+// 播放计时
+class Time extends PureComponent {
+  static toTimeString(secs) {
+    const exaSecs = Math.round(secs);
+    const minutes = Math.floor(exaSecs / 60) || 0;
+    const seconds = exaSecs - minutes * 60 || 0;
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   }
 
@@ -23,20 +20,20 @@ class Index extends Component {
     if (typeof format !== 'string') format = 'mm:ss';
     return (
       <div className={pp.Time}>
-        {format === 'mm:ss' ? this.toTimeString(secs || 0) : null}
+        {format === 'mm:ss' ? Time.toTimeString(secs || 0) : null}
       </div>
     );
   }
 }
 
-Index.defaultProps = {
-  secs: null,
-  format: 'mm:ss'
-};
-
-Index.propTypes = {
-  // secs: PropTypes.number,
+Time.propTypes = {
+  secs: PropTypes.number,
   format: PropTypes.string
 };
 
-export default Index;
+Time.defaultProps = {
+  secs: 0,
+  format: 'mm:ss'
+};
+
+export default Time;
