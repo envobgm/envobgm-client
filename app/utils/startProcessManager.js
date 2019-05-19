@@ -8,6 +8,7 @@ import DownloadManager from './downloadManager';
 import MusicSchedule from './musicSchedule';
 import doJob from './downloadJob';
 import calcSignedUrl from '../api/signature';
+import { cherryAll, extractTracks } from '../api/cache';
 
 // const debug = require('debug')('startProcessManager');
 const path = require('path');
@@ -76,62 +77,46 @@ export default class StartProcessManager {
 
   async _checkCache(p) {
     this._updateUI(true, '正在检查本地歌曲缓存');
-    const {
-      playlists,
-      scrollAudioMessage,
-      alarmAudioMessages,
-      setting,
-      site
-    } = p;
-    const dm = new DownloadManager();
-    const cPlaylists = [];
-    for (const playlist of playlists) {
-      cPlaylists.push({
-        ...playlist,
-        tracks: await dm.checkCache(playlist.tracks)
-      });
-    }
-    const cScrollAudioMessage = await dm.checkCache([scrollAudioMessage]);
-    const cAlarmAudioMessages = await dm.checkCache(alarmAudioMessages);
-    return {
-      cPlaylists,
-      cScrollAudioMessage,
-      cAlarmAudioMessages,
-      setting,
-      site
-    };
+    const all = await cherryAll(p);
+    return { site: p.site, setting: p.setting, ...all };
   }
 
   async _downloadCache(res) {
     this._updateUI(true, '正在下载缓存');
-    const playlists = res.cPlaylists.map((cpl, id) => ({
-      ...cpl,
-      id,
-      tracks: cpl.tracks.cached
-    }));
-    const alarmAudioMessages = res.cAlarmAudioMessages.cached;
-    const scrollAudioMessage = res.cScrollAudioMessage.cached;
+
+    const {
+      setting,
+      playlists: { cachedPlaylists, unCachedPlaylists },
+      scrollAudioMessage: {
+        cachedScrollAudioMessage,
+        unCachedScrollAudioMessage
+      },
+      alarmAudioMessages: {
+        cachedAlarmAudioMessages,
+        unCachedAlarmAudioMessages
+      }
+    } = res;
+
     // 语音类优先下载，否则容易招致错误！！
     if (
-      res.cAlarmAudioMessages.unCached.length > 0 ||
-      res.cScrollAudioMessage.unCached.length > 0
+      unCachedScrollAudioMessage.length > 0 ||
+      unCachedAlarmAudioMessages.length > 0
     ) {
       const dm = new DownloadManager();
       await dm.downloadSeries([
-        ...res.cAlarmAudioMessages.unCached,
-        ...res.cScrollAudioMessage.unCached
+        ...unCachedScrollAudioMessage,
+        ...unCachedAlarmAudioMessages
       ]);
       console.info('完成语音类别的track下载');
       await this.run();
       return;
     }
-    const { setting } = res;
     // 参数应该从props中拿到
     this._end();
     this._musicSchedule = new MusicSchedule(
-      playlists,
-      alarmAudioMessages,
-      scrollAudioMessage,
+      cachedPlaylists,
+      cachedAlarmAudioMessages,
+      cachedScrollAudioMessage,
       setting
     );
     this._updateUI(false, '初始化完成');
@@ -143,16 +128,13 @@ export default class StartProcessManager {
     }
 
     if (currentPlaylist.length === 0) {
-      const firstPatchSongs = res.cPlaylists.map(pl => pl.tracks.unCached[0]);
+      const firstPatchSongs = unCachedPlaylists.map(pl => pl.tracks[0]);
       console.info('第一批歌曲 ', firstPatchSongs);
       const dm = new DownloadManager();
       await dm.downloadSeries(firstPatchSongs);
       await this.run();
     } else {
-      const unCachedTracks = res.cPlaylists.reduce(
-        (a, b) => a.concat(b.tracks.unCached),
-        []
-      );
+      const unCachedTracks = extractTracks(unCachedPlaylists);
       if (unCachedTracks.length > 0) {
         console.info('缓存有缺失，去下载');
         this._execDownload();

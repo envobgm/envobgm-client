@@ -67,7 +67,7 @@ class PlaylistManager extends MusicManager {
       return this._playlist;
     }
     debug('当前播放的时段: %s~%s', newPl.startTm, newPl.endTm);
-    this._playlistId = newPl.id;
+    this._playlistId = newPl.uuid;
     this._uuid = newPl.uuid;
     this.stop(); // 停止旧播放列表的播放
     this._playlist = newPl.tracks; // 用新的播放列表替换，并重置索引，避免访问越界。
@@ -121,7 +121,7 @@ class PlaylistManager extends MusicManager {
       end = moment(playlist.endTm, 'HH:mm:ss');
       now = moment();
       if (start.isBefore(now) && end.isAfter(now)) {
-        if (this._canSwitch(playlist.id)) {
+        if (this._canSwitch(playlist.uuid)) {
           // 判断是否是新旧播放列表的交替
           return this._switch(playlist);
         }
