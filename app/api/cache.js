@@ -3,6 +3,19 @@ import DownloadManager from '../utils/downloadManager';
 
 const debug = require('debug')('cache');
 
+export function combineAllUnCached(plan) {
+  const {
+    unCachedPlaylists,
+    unCachedScrollAudioMessage,
+    unCachedAlarmAudioMessages
+  } = plan;
+  return [
+    extractTracks(unCachedPlaylists),
+    unCachedScrollAudioMessage,
+    unCachedAlarmAudioMessages
+  ].reduce((a, b) => a.concat(b), []);
+}
+
 export function extractTracks(playlists) {
   return playlists.reduce((a, b) => a.concat(b.tracks), []);
 }
