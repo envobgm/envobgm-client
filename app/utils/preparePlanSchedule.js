@@ -1,8 +1,7 @@
 /* eslint-disable no-restricted-syntax,no-await-in-loop */
 import schedule from 'node-schedule';
 import moment from 'moment';
-import { getPlayList } from '../api';
-import { macAddr } from './cust';
+import { getDailyPlan } from '../api';
 import nedb from './db';
 import DownloadManager from './downloadManager';
 
@@ -63,8 +62,7 @@ const preparePlan = async date => {
    *  无版本更新
    */
   const planDate = moment(date).add(1, 'days');
-  const mac = await macAddr();
-  const plan = await getPlayList(mac, planDate);
+  const plan = await getDailyPlan(planDate);
   const cachePlan = await nedb.getPlayerPlan();
   if (moment(cachePlan.updateDate).unix() < moment(plan.updateDate).unix()) {
     console.debug('发现新的播放计划 ', plan);

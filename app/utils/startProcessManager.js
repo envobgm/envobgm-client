@@ -2,16 +2,12 @@
 import moment from 'moment';
 import { message } from 'antd/lib/index';
 import fs from 'fs';
-import {
-  calcSignedUrl,
-  getMacAddr,
-  getPlayList,
-  requestDownloadAK
-} from '../api';
+import { getDailyPlan, getSTS } from '../api';
 import nedb from './db';
 import DownloadManager from './downloadManager';
 import MusicSchedule from './musicSchedule';
 import doJob from './downloadJob';
+import calcSignedUrl from '../api/signature';
 
 // const debug = require('debug')('startProcessManager');
 const path = require('path');
@@ -42,11 +38,8 @@ export default class StartProcessManager {
           const res = await this._checkCache(playerPlan);
           await this._downloadCache(res);
         } else {
-          const mac = await getMacAddr();
-          const token = await requestDownloadAK(mac);
-          const dailyPlan = await getPlayList(mac).then(
-            res => res.content.dailyPlan
-          );
+          const token = await getSTS();
+          const dailyPlan = await getDailyPlan();
           if (!dailyPlan || !token) {
             throw new Error('获取token或者播放列表失败！');
           }

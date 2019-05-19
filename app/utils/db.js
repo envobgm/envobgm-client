@@ -17,6 +17,7 @@ function getDB() {
 
 getDB.dbPath = dbPath;
 
+getDB.clear = () => fs.unlinkSync(dbPath);
 getDB.checkDBPath = () => fs.existsSync(dbPath);
 
 getDB.insert = async function(doc) {
@@ -55,10 +56,6 @@ getDB.getPlayerPlan = async function() {
       (err, docs) => resolve(docs && docs[0] ? docs[0].playerPlan : null)
     );
   });
-};
-
-getDB.clear = async function() {
-  await fs.unlinkSync(dbPath);
 };
 
 export default getDB;

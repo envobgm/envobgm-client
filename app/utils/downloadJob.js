@@ -2,7 +2,7 @@
 import Debug from 'debug';
 import DownloadManager from './downloadManager';
 import nedb from './db';
-import { checkPlaylist } from '../api/index';
+import { updateDailyPlan } from '../api/index';
 
 const debug = Debug('downloadJob');
 
@@ -10,7 +10,7 @@ export default function doJob(date, callback) {
   let count = 0;
 
   async function job() {
-    const unCached = await checkPlaylist(date);
+    const unCached = await updateDailyPlan(date);
     // todo 操，调试了一晚上，发现重试机制导致了callback && callback(100, true);这段代码调了N次
     if (unCached && unCached.length > 0) {
       const downloadManager = new DownloadManager();
