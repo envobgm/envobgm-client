@@ -163,9 +163,9 @@ export default class StartProcessManager {
       if (unCachedTracks.length > 0) {
         console.info('缓存有缺失，去下载');
         this._execDownload();
-        return;
+      } else {
+        console.info('啥事儿都不做...');
       }
-      console.info('啥事儿都不做...');
     }
     this._start();
   }
