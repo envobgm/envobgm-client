@@ -2,7 +2,7 @@ import moment from 'moment';
 import calcSignedUrl from './signature';
 import netUtil from '../utils/netUtil';
 import { macAddr as getMacAddr } from '../utils/cust';
-import { cherryUnCached } from './cache';
+import { cherryUnCached, extractTracks } from './cache';
 import rebuildDB from './rebuildDB';
 
 const debug = require('debug')('api');
@@ -63,8 +63,16 @@ export const updateDailyPlan = async date => {
   // 更新本地数据库
   await rebuildDB(calcedPlan);
   // 检查缓存
-  const res = await cherryUnCached(calcedPlan);
-  const arr = Object.values(res).reduce((a, b) => a.concat(b), []);
+  const {
+    unCachedPlaylists,
+    unCachedScrollAudioMessage,
+    unCachedAlarmAudioMessages
+  } = await cherryUnCached(calcedPlan);
+  const arr = [
+    extractTracks(unCachedPlaylists),
+    unCachedScrollAudioMessage,
+    unCachedAlarmAudioMessages
+  ].reduce((a, b) => a.concat(b), []);
   debug('缓存检查结果：', arr);
   return arr;
 };

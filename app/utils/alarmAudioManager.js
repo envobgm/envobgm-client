@@ -22,7 +22,6 @@ class AlarmAudioManager extends MusicManager {
       now1.seconds(alarmTime.seconds());
       const diff = Math.abs(now1.diff(now, 'milliseconds'));
       if (diff < 4000) {
-        debug(`diff ${diff}`);
         if (!alarmAudio.howl) {
           debug('localFilePath : %o', alarmAudio.filePathName);
           alarmAudio.howl = new Howl({
