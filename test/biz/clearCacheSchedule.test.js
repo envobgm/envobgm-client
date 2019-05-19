@@ -4,7 +4,7 @@ const sinon = require('sinon');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const nedb = require('./db');
+const nedb = require('../../app/utils/db');
 
 const dbPath = path.join(os.homedir(), '.bgm', 'player.db');
 const cachePath = path.join(os.homedir(), '.bgm');
