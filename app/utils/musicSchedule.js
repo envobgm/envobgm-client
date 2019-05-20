@@ -8,7 +8,7 @@ import Debug from 'debug';
 import EventEmitter from 'events';
 import MusicManager from './musicManager';
 import AlarmAudioManager from './alarmAudioManager';
-import PlaylistManager from './playlistManager';
+import PlaylistManagerPorxy from './playlistManagerProxy';
 import ScrollAudioManager from './scrollAudioManager';
 
 const debug = Debug('MusicSchedule');
@@ -16,7 +16,7 @@ const debug = Debug('MusicSchedule');
 class MusicSchedule extends EventEmitter {
   constructor(playlists, alarmAudioMessages, scrollAudioMessage, setting) {
     super();
-    this._playlistManager = new PlaylistManager(playlists, setting);
+    this._playlistManager = new PlaylistManagerPorxy(playlists, setting);
     this._alarmAudioManager = new AlarmAudioManager(alarmAudioMessages);
     this._scrollAudioManager = new ScrollAudioManager(scrollAudioMessage);
     this._setting = setting;

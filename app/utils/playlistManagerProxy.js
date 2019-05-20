@@ -1,6 +1,5 @@
-/* eslint-disable no-underscore-dangle */
-
 import { random } from './cust';
+import PlaylistManager from './playlistManager';
 
 const debug = require('debug')('playlistManagerProxy.js');
 
@@ -9,10 +8,11 @@ const debug = require('debug')('playlistManagerProxy.js');
  * @param playlistManager
  * @returns {object}
  */
-export default function proxy(playlistManager) {
-  return new Proxy(playlistManager, {
+export default function proxy(playlists, setting) {
+  // @TODO: 后续拔除playlistManager的构造传参
+  return new Proxy(new PlaylistManager(playlists, setting), {
     proxy: true,
-    playlist: playlistManager._playlist,
+    playlist: this._playlist,
     randoms: [],
     inedx: 0,
 
