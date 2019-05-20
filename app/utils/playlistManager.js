@@ -12,6 +12,7 @@ class PlaylistManager extends MusicManager {
   constructor(plan, setting) {
     // 默认选择第一个作为播放列表
     super(plan[0].tracks);
+    // @TODO: 暂时不能成为完全意义上的代理模式，等把业务代码剥离出去，代理的初始化要放在musicSchedule进行
     playlistManagerProxy(this);
     this._setting = setting;
     this._plan = plan;
