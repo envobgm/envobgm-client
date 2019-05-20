@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, Button, Input, Row, Spin, Steps } from 'antd';
 import { ipcRenderer } from 'electron';
-import { wait } from '../../utils/cust';
+import cust from '../../utils/cust';
 import st from './index.css';
 import GetDB from '../../utils/db';
 import { active } from '../../api';
@@ -35,7 +35,7 @@ export default class ActivePage extends Component<Props> {
       content: '客户端和机器是一起绑定激活的，换机器需要重新激活'
     };
     this.activeCode = null;
-    this.wait = wait;
+    this.wait = cust.wait;
     ipcRenderer.send('resize', 700, 500);
   }
 

@@ -13,11 +13,13 @@ class PlaylistManager extends MusicManager {
     super(plan[0].tracks);
     this._setting = setting;
     this._plan = plan;
+    this._playlistId = null;
     this._currentIndex = null;
     this._currentPlName = null;
     this._currentMusic = null;
     this._playlist = null;
     this._uuid = null;
+    this._randoms = []; // 队列结构，存放歌曲下标，完成随机播放，且一轮内不重复
 
     // 是否为最后一首歌（针对播放列表切换的问题，不能直接把当前歌曲停止。）
     this._finalMusic = false;
@@ -30,15 +32,29 @@ class PlaylistManager extends MusicManager {
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
+  get currentIndex() {
+    return this._currentIndex;
+  }
+
   get currentPlName() {
     return this._currentPlName;
+  }
+
+  set currentIndex(index) {
+    this._currentIndex = index;
+  }
+
+  _resetState() {
+    this._playlistId = null;
+    this._currentIndex = null;
+    this._currentPlName = null;
   }
 
   _canSwitch(id) {
     // 对于这两个判断条件的解释：
     // 1、刚好在两个播放列表切换的时间点上
     // 2、由于在切换时发现旧的播放列表还有最后一首歌曲没播完，实际还没发生切换，要等最后一首歌end之后才能切换
-    if (this._uuid !== id || this._finalMusic) {
+    if (this._playlistId !== id || this._finalMusic) {
       return true;
     }
     return false;
@@ -51,6 +67,7 @@ class PlaylistManager extends MusicManager {
       return this._playlist;
     }
     debug('当前播放的时段: %s~%s', newPl.startTm, newPl.endTm);
+    this._playlistId = newPl.uuid;
     this._uuid = newPl.uuid;
     this.stop(); // 停止旧播放列表的播放
     this._playlist = newPl.tracks; // 用新的播放列表替换，并重置索引，避免访问越界。
@@ -114,6 +131,7 @@ class PlaylistManager extends MusicManager {
       }
     }
 
+    this._resetState();
     return (this._playlist = null);
   }
 
@@ -169,10 +187,14 @@ class PlaylistManager extends MusicManager {
     this._currentMusic.howl = null;
     if (this._finalMusic) this._finalMusic = false;
     if (!this._playlist) {
+      this._resetState();
       return;
     }
     this._currentIndex++;
     this._currentIndex %= this._playlist.length;
+    debug(
+      `end ${this.getCurrentMusic().title}，next index++: ${this._currentIndex}`
+    );
   }
 
   play() {
@@ -203,9 +225,23 @@ class PlaylistManager extends MusicManager {
     const music = this.getCurrentMusic();
     if (music && music.howl && music.howl.playing()) {
       music.howl.stop();
-      if (this.proxy) {
-        this.randomPlay();
+      // 下次随机播放不同的音乐
+      if (!this._playlist) {
+        this._resetState();
+        return;
       }
+      if (this._randoms.length === 0) {
+        console.debug('随机队列一轮播放结束');
+        this._randoms = Object.keys(this._playlist);
+      }
+      this._currentIndex = this._randoms.splice(
+        this.getRandomInt(0, this._randoms.length),
+        1
+      );
+      console.debug(
+        '歌曲放完了，准备随机放下一首歌曲 ',
+        this._playlist[this._currentIndex]
+      );
     }
   }
 
