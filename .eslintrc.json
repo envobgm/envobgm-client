@@ -6,5 +6,16 @@
         "config": "configs/webpack.config.eslint.js"
       }
     }
+  },
+  "rules": {
+    // 支持下划线标记
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allowAfterThis": true,
+        "allowAfterSuper": true,
+        "enforceInMethodNames": true
+      }
+    ]
   }
 }
