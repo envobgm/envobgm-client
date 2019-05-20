@@ -5,7 +5,7 @@ import moment from 'moment';
 import message from 'antd/lib/message';
 import MusicManager from './musicManager';
 
-const debug = Debug('PlaylistManager');
+const debug = Debug('playlistManager');
 
 class PlaylistManager extends MusicManager {
   constructor(plan, setting) {
@@ -82,6 +82,7 @@ class PlaylistManager extends MusicManager {
       this._plan.forEach(pl => {
         // 更新正在使用的播放列表
         if (finishedSong.plUuid == this._uuid) {
+          debug('正在使用的播放列表加入新歌：', this.getCurrentPlaylist());
           this.getCurrentPlaylist().push(finishedSong);
           return;
         }
@@ -90,6 +91,7 @@ class PlaylistManager extends MusicManager {
           finishedSong.plUuid == pl.uuid &&
           finishedSong.plUuid != this._uuid
         ) {
+          debug('未使用的播放列表加入新歌：', pl.tracks);
           pl.tracks.push(finishedSong);
         }
       });
