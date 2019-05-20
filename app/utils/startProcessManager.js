@@ -173,6 +173,11 @@ export default class StartProcessManager {
   }
 
   _start() {
+    if (this._timerKey !== null) {
+      clearInterval(this._timerKey);
+      this._timerKey = null;
+    }
+
     this._musicSchedule.start(3000);
     this._timerKey = setInterval(() => {
       if (this._musicSchedule._playlistManager.playing()) {

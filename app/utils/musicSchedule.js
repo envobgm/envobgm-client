@@ -132,6 +132,11 @@ class MusicSchedule extends EventEmitter {
   }
 
   start(i) {
+    if (this._timeId !== null) {
+      clearInterval(this._timeId);
+      this._timeId = null;
+    }
+
     debug('start setInterval');
     const interval = i >= 100 && i <= 2000 ? i : 1000;
     this._timeId = setInterval(this._run.bind(this), interval);
@@ -141,6 +146,7 @@ class MusicSchedule extends EventEmitter {
     debug('clearInterval');
     if (this._timeId) {
       clearInterval(this._timeId);
+      this._timeId = null;
       this._playlistManager.stop();
       this._scrollAudioManager.stop();
       this._alarmAudioManager.stop();
