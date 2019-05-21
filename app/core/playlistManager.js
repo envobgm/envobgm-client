@@ -106,7 +106,6 @@ class PlaylistManager extends MusicManager {
 
   _onEnd() {
     super._onEnd();
-    if (this._finalMusic) this._finalMusic = false;
     debug(`_onEnd ${this.findCanPlayMusic().title}`);
   }
 

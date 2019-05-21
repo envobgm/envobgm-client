@@ -105,6 +105,9 @@ export default function proxy(playlists, setting) {
             const end = o[k];
             end.apply(o);
             setSong.apply(o);
+            (function completeFinalMusic() {
+              if (this._finalMusic) this._finalMusic = false;
+            }.apply(o));
           };
         case proxy.METHOD_GET_PLAYLIST:
           // debug(proxy.METHOD_GET_PLAYLIST);
