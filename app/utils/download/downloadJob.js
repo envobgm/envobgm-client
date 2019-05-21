@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-expressions,no-shadow,no-plusplus */
 import Debug from 'debug';
 import DownloadManager from './downloadManager';
-import nedb from './db';
-import { updateDailyPlan } from '../api/index';
+import nedb from '../db';
+import { updateDailyPlan } from '../../api/index';
 
 const debug = Debug('downloadJob');
 

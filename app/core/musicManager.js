@@ -3,9 +3,8 @@
  * Created by shenyin.sy on 17/8/17.
  */
 import EventEmitter from 'events';
-import Debug from 'debug';
 
-const debug = Debug('MusicManager');
+const debug = require('debug')('musicManager');
 
 class MusicManager extends EventEmitter {
   constructor(playlist) {
@@ -13,7 +12,7 @@ class MusicManager extends EventEmitter {
     this._playlist = Array.isArray(playlist) ? playlist : [playlist];
     // howler event is late
     this._isLoading = false;
-    this._isComplete = true;
+    this._isCompleted = true;
 
     this.setMaxListeners(10);
   }
@@ -27,13 +26,13 @@ class MusicManager extends EventEmitter {
 
   _onPlay() {
     this._isLoading = false;
-    this._isComplete = false;
+    this._isCompleted = false;
     debug(MusicManager.PALY);
     this.emit(MusicManager.PALY);
   }
 
   _onEnd() {
-    this._isComplete = true;
+    this._isCompleted = true;
     debug(MusicManager.END);
     this.emit(MusicManager.END);
   }
@@ -44,7 +43,7 @@ class MusicManager extends EventEmitter {
   }
 
   _onStop() {
-    this._isComplete = true;
+    this._isCompleted = true;
     debug(MusicManager.STOP);
     this.emit(MusicManager.STOP);
   }
@@ -60,7 +59,7 @@ class MusicManager extends EventEmitter {
   }
 
   complete() {
-    return this._isComplete;
+    return this._isCompleted;
   }
 
   play() {}

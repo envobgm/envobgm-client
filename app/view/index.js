@@ -11,7 +11,7 @@ import Switch from './components/switch';
 import Time from './components/time';
 import Progress from './components/progress';
 import Volume from './components/volume';
-import invokeClearSchedule from '../utils/clearCacheSchedule';
+import invokeClearTask from '../utils/task/clearCacheTask';
 import StartProcessManager from '../utils/startProcessManager';
 
 const debug = Debug('player');
@@ -64,7 +64,7 @@ export default class Home extends Component {
 
     ipcRenderer.send('resize', 500, 270);
     // 启动定时清除缓存计划
-    invokeClearSchedule();
+    invokeClearTask();
   }
 
   async componentWillMount() {

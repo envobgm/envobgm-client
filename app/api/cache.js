@@ -1,5 +1,5 @@
 import Promise from 'bluebird';
-import DownloadManager from '../utils/downloadManager';
+import DownloadManager from '../utils/download/downloadManager';
 
 const debug = require('debug')('cache');
 

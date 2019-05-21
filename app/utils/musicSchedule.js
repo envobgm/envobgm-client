@@ -6,17 +6,17 @@
 import moment from 'moment';
 import Debug from 'debug';
 import EventEmitter from 'events';
-import MusicManager from './musicManager';
-import AlarmAudioManager from './alarmAudioManager';
-import PlaylistManager from './playlistManager';
-import ScrollAudioManager from './scrollAudioManager';
+import MusicManager from '../core/musicManager';
+import AlarmAudioManager from '../core/alarmAudioManager';
+import ScrollAudioManager from '../core/scrollAudioManager';
+import playlistManagerProxy from '../core/pattern/proxy/playlistManagerProxy';
 
 const debug = Debug('MusicSchedule');
 
 class MusicSchedule extends EventEmitter {
   constructor(playlists, alarmAudioMessages, scrollAudioMessage, setting) {
     super();
-    this._playlistManager = new PlaylistManager(playlists, setting);
+    this._playlistManager = playlistManagerProxy(playlists, setting);
     this._alarmAudioManager = new AlarmAudioManager(alarmAudioMessages);
     this._scrollAudioManager = new ScrollAudioManager(scrollAudioMessage);
     this._setting = setting;
@@ -97,6 +97,7 @@ class MusicSchedule extends EventEmitter {
       // 开始播放语音播报， 可能打断_playlistManager的播放
       // 如果插播语音正在播放，则不处理，简化
       if (
+        !this._alarmAudioManager.playing() &&
         !this._scrollAudioManager.playing() &&
         this._alarmAudioManager.findCanPlayMusic()
       ) {
@@ -107,6 +108,7 @@ class MusicSchedule extends EventEmitter {
 
       if (
         !this._alarmAudioManager.playing() &&
+        !this._scrollAudioManager.playing() &&
         !this._playlistManager.playing() &&
         this._playlistManager.complete() &&
         this._scrollAudioManager.findCanPlayMusic(this._index)
@@ -117,9 +119,10 @@ class MusicSchedule extends EventEmitter {
 
       // 开始播放播放列表中的歌曲
       if (
-        !this._scrollAudioManager.playing() &&
         !this._alarmAudioManager.playing() &&
-        (this._playlistManager.complete() || !this._playlistManager.pausing())
+        !this._scrollAudioManager.playing() &&
+        !this._playlistManager.playing() &&
+        this._playlistManager.complete()
       ) {
         this._playlistManager.play();
       }

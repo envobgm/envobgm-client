@@ -1,9 +1,9 @@
 /* eslint-disable no-restricted-syntax,no-await-in-loop */
 import schedule from 'node-schedule';
 import moment from 'moment';
-import { getDailyPlan } from '../api';
-import nedb from './db';
-import DownloadManager from './downloadManager';
+import { getDailyPlan } from '../../api/index';
+import nedb from '../db';
+import DownloadManager from '../download/downloadManager';
 
 const path = require('path');
 const os = require('os');

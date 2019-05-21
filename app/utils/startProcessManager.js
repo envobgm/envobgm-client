@@ -2,11 +2,11 @@
 import moment from 'moment';
 import { message } from 'antd/lib/index';
 import fs from 'fs';
-import { getDailyPlan, getSTS } from '../api';
+import { getDailyPlan, getSTS } from '../api/index';
 import nedb from './db';
-import DownloadManager from './downloadManager';
+import DownloadManager from './download/downloadManager';
 import MusicSchedule from './musicSchedule';
-import doJob from './downloadJob';
+import doJob from './download/downloadJob';
 import calcSignedUrl from '../api/signature';
 import { cherryAll, extractTracks } from '../api/cache';
 
@@ -122,7 +122,7 @@ export default class StartProcessManager {
     this._updateUI(false, '初始化完成');
     this._updateCfg(setting.playerVolumn);
 
-    const currentPlaylist = this._musicSchedule._playlistManager.getCurrentPlaylist();
+    const currentPlaylist = this._musicSchedule._playlistManager.findCanPlayList();
     if (!currentPlaylist) {
       setTimeout(this.run.bind(this), 5000);
     }
@@ -181,7 +181,7 @@ export default class StartProcessManager {
     this._musicSchedule.start(3000);
     this._timerKey = setInterval(() => {
       if (this._musicSchedule._playlistManager.playing()) {
-        const currMusic = this._musicSchedule._playlistManager.getCurrentMusic();
+        const currMusic = this._musicSchedule._playlistManager.findCanPlayMusic();
         const currSeek = currMusic.howl.seek();
         const currDuration = currMusic.howl.duration();
         this._updateInfo(
