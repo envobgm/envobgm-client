@@ -40,7 +40,10 @@ const clearCache = async function() {
   nedb().insert({ activeCode });
 };
 
-export default function invokeClearSchedule() {
+/**
+ * 定时清除缓存作业，于每月的30号21点执行
+ */
+export default function invokeClearTask() {
   // 每月的30号晚上9点触发缓存清除任务
   schedule.scheduleJob('0 0 21 30 * *', async () => {
     await clearCache();

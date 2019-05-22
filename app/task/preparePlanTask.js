@@ -1,14 +1,15 @@
-/* eslint-disable no-restricted-syntax,no-await-in-loop */
 import schedule from 'node-schedule';
 import moment from 'moment';
-import { getDailyPlan } from '../api/index';
-import nedb from '../utils/dbUtil';
+import Promise from 'bluebird';
+import path from 'path';
+import os from 'os';
+import Datastore from 'nedb';
+import fs from 'fs';
 import DownloadManager from '../download/downloadManager';
+import nedb from '../utils/dbUtil';
+import { getDailyPlan } from '../api/index';
 
-const path = require('path');
-const os = require('os');
-const Datastore = require('nedb');
-const fs = require('fs');
+const dm = new DownloadManager();
 
 const checkCache = async p => {
   const {
@@ -18,14 +19,12 @@ const checkCache = async p => {
     setting,
     site
   } = p;
-  const dm = new DownloadManager();
-  const cPlaylists = [];
-  for (const playlist of playlists) {
-    cPlaylists.push({
-      ...playlist,
-      tracks: await dm.checkCache(playlist.tracks)
-    });
-  }
+  const cPlaylists = await Promise.map(playlists, async pl => {
+    return {
+      ...pl,
+      tracks: await dm.checkCache(pl.tracks)
+    };
+  });
   const cScrollAudioMessage = await dm.checkCache([scrollAudioMessage]);
   const cAlarmAudioMessages = await dm.checkCache(alarmAudioMessages);
   return {
@@ -44,7 +43,6 @@ const downloadCache = async res => {
   );
   const unCachedAlarms = res.cAlarmAudioMessages.unCached;
   const unCachedScrolls = res.cScrollAudioMessage.unCached;
-  const dm = new DownloadManager();
   await dm.downloadSeries([
     ...unCachedTracks,
     ...unCachedAlarms,
@@ -89,9 +87,36 @@ const preparePlan = async date => {
   }
 };
 
-export default function invokePrepareSchedule() {
+/**
+ * 预缓存作业，整点执行一次
+ */
+export function invokePrepareTask() {
   // 每月的30号晚上9点触发缓存清除任务
   schedule.scheduleJob('0 0 * * * *', async () => {
     await preparePlan();
   });
+}
+
+/**
+ * 检查当天是否有可以使用的预缓存，并替换最新
+ * @returns {Promise<void>}
+ */
+export async function checkPlan() {
+  const newPlanPath = path.join(
+    os.homedir(),
+    '.bgm',
+    `${moment().format('YYYY-MM-DD')}.db`
+  );
+  if (fs.existsSync(newPlanPath)) {
+    console.debug('发现新的播放计划');
+    const activeCode = await nedb.getActiveCode();
+    const planPath = nedb.dbPath;
+    // 删除旧缓存
+    fs.unlinkSync(planPath);
+    // 存储激活码
+    const db = new Datastore({ filename: newPlanPath, autoload: true });
+    db.insert({ activeCode });
+    // 重建缓存，新的播放计划替代旧的计划
+    fs.renameSync(newPlanPath, planPath);
+  }
 }

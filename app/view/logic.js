@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle,no-await-in-loop,no-restricted-syntax,class-methods-use-this */
 import moment from 'moment';
 import { message } from 'antd/lib/index';
-import fs from 'fs';
 import { getDailyPlan, getSTS } from '../api/index';
 import nedb from '../utils/dbUtil';
 import DownloadManager from '../download/downloadManager';
@@ -11,9 +10,6 @@ import calcSignedUrl from '../api/signature';
 import { cherryAll, extractTracks } from '../api/cache';
 
 // const debug = require('debug')('startProcessManager');
-const path = require('path');
-const os = require('os');
-const Datastore = require('nedb');
 const { history } = require('../store/configureStore');
 
 export default class Logic {
@@ -53,26 +49,6 @@ export default class Logic {
       }
     }
     history.push('/active');
-  }
-
-  async _checkPlan() {
-    const newPlanPath = path.join(
-      os.homedir(),
-      '.bgm',
-      `${moment().format('YYYY-MM-DD')}.db`
-    );
-    if (fs.existsSync(newPlanPath)) {
-      console.debug('发现新的播放计划');
-      const activeCode = await nedb.getActiveCode();
-      const planPath = nedb.dbPath;
-      // 删除旧缓存
-      fs.unlinkSync(planPath);
-      // 存储激活码
-      const db = new Datastore({ filename: newPlanPath, autoload: true });
-      db.insert({ activeCode });
-      // 重建缓存，新的播放计划替代旧的计划
-      fs.renameSync(newPlanPath, planPath);
-    }
   }
 
   async _checkCache(p) {
