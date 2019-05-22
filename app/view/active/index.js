@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Alert, Button, Input, Row, Spin, Steps } from 'antd';
 import { ipcRenderer } from 'electron';
-import { wait } from '../../utils/cust';
+import { wait } from '../../utils/custUtil';
 import st from './index.css';
-import GetDB from '../../utils/db';
+import GetDB from '../../utils/dbUtil';
 import { active } from '../../api';
 import { history } from '../../store/configureStore';
 

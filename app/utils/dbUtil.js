@@ -5,14 +5,14 @@ const Datastore = require('nedb');
 const fs = require('fs');
 
 const dbPath = path.join(os.homedir(), '.bgm', 'player.db');
-let db = null;
+let dbUtil = null;
 
 function getDB() {
-  if (db) {
-    return db;
+  if (dbUtil) {
+    return dbUtil;
   }
-  db = new Datastore({ filename: dbPath, autoload: true });
-  return db;
+  dbUtil = new Datastore({ filename: dbPath, autoload: true });
+  return dbUtil;
 }
 
 getDB.dbPath = dbPath;

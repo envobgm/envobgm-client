@@ -6,10 +6,10 @@
 import moment from 'moment';
 import Debug from 'debug';
 import EventEmitter from 'events';
-import MusicManager from '../core/musicManager';
-import AlarmAudioManager from '../core/alarmAudioManager';
-import ScrollAudioManager from '../core/scrollAudioManager';
-import playlistManagerProxy from '../core/pattern/proxy/playlistManagerProxy';
+import MusicManager from './musicManager';
+import AlarmAudioManager from './alarmAudioManager';
+import ScrollAudioManager from './scrollAudioManager';
+import playlistManagerProxy from './pattern/proxy/playlistManagerProxy';
 
 const debug = Debug('MusicSchedule');
 

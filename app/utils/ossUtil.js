@@ -5,10 +5,10 @@ const OSS = require('ali-oss');
 const Client = OSS;
 
 /**
- * @class OssClient
+ * @class OssUtil
  * @desc OSS客户端
  */
-export default class OssClient {
+export default class OssUtil {
   constructor(token) {
     // OSS 操作对象
     // debug(`token：${token}`);

@@ -3,10 +3,10 @@ import moment from 'moment';
 import { message } from 'antd/lib/index';
 import fs from 'fs';
 import { getDailyPlan, getSTS } from '../api/index';
-import nedb from './db';
-import DownloadManager from './download/downloadManager';
-import MusicSchedule from './musicSchedule';
-import doJob from './download/downloadJob';
+import nedb from '../utils/dbUtil';
+import DownloadManager from '../download/downloadManager';
+import MusicSchedule from '../core/musicSchedule';
+import doJob from '../download/downloadJob';
 import calcSignedUrl from '../api/signature';
 import { cherryAll, extractTracks } from '../api/cache';
 
@@ -16,7 +16,7 @@ const os = require('os');
 const Datastore = require('nedb');
 const { history } = require('../store/configureStore');
 
-export default class StartProcessManager {
+export default class Logic {
   constructor(options) {
     this._updateUI = options.updateUI;
     this._updateCfg = options.updateCfg;

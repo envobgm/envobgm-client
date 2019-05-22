@@ -1,7 +1,7 @@
 import moment from 'moment';
 import calcSignedUrl from './signature';
 import netUtil from '../utils/netUtil';
-import { macAddr as getMacAddr } from '../utils/cust';
+import { macAddr as getMacAddr } from '../utils/custUtil';
 import { cherryUnCached, combineAllUnCached } from './cache';
 import rebuildDB from './rebuildDB';
 

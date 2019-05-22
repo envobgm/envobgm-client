@@ -1,4 +1,4 @@
-import nedb from '../utils/db';
+import nedb from '../utils/dbUtil';
 
 /**
  * 更新数据库

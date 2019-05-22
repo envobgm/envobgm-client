@@ -11,8 +11,8 @@ import Switch from './components/switch';
 import Time from './components/time';
 import Progress from './components/progress';
 import Volume from './components/volume';
-import invokeClearTask from '../utils/task/clearCacheTask';
-import StartProcessManager from '../utils/startProcessManager';
+import invokeClearTask from '../task/clearCacheTask';
+import Logic from './logic';
 
 const debug = Debug('player');
 
@@ -75,7 +75,7 @@ export default class Home extends Component {
       updateInfo: (seek, process, duration) =>
         this.setState({ seek, process, duration })
     };
-    this._startProcessManager = new StartProcessManager(options);
+    this._startProcessManager = new Logic(options);
     await this._startProcessManager.run();
   }
 

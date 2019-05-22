@@ -2,7 +2,7 @@
 
 import moment from 'moment';
 import PlaylistManager from '../../playlistManager';
-import { random } from '../../../utils/cust';
+import { random } from '../../../utils/custUtil';
 
 const debug = require('debug')('playlistManagerProxy');
 

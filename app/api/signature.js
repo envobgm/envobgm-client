@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
-import OssClient from '../utils/ossClient';
+import OssUtil from '../utils/ossUtil';
 
 export default function calcSignature(dailyPlan, token) {
-  const client = new OssClient(token);
+  const client = new OssUtil(token);
   const playlists = dailyPlan.playlists.map((playlist, index) => {
     return {
       ...playlist,

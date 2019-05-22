@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow,func-names */
 import schedule from 'node-schedule';
-import nedb from '../db';
+import nedb from '../utils/dbUtil';
 
 const fs = require('fs');
 const os = require('os');
