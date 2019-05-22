@@ -104,7 +104,7 @@
     },
     "publish": {
       "provider": "generic",
-      "url": "http://127.0.0.1:8080/release",
+      "url": "https://installer-store.oss-cn-shanghai.aliyuncs.com",
       "private": false
     }
   },
