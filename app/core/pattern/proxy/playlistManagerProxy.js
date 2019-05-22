@@ -11,7 +11,9 @@ const debug = require('debug')('playlistManagerProxy');
  */
 export default function proxy(playlists, setting) {
   let songMarks = []; // 随机队列
-
+  let mark = null; // 歌曲索引
+  let playlistUUID = null; // 当前播放列表索引
+  let isFinal = false; // 列表切换时是否存在播放中的歌曲
   /**
    * 随机设置播放歌曲
    */
@@ -20,11 +22,8 @@ export default function proxy(playlists, setting) {
       debug('随机队列一轮播放结束');
       songMarks = Object.keys(this._playlist);
     }
-    this._currentIndex = songMarks.splice(random(0, songMarks.length), 1);
-    debug(
-      '歌曲放完了，准备随机放下一首歌曲 ',
-      this._playlist[this._currentIndex]
-    );
+    mark = songMarks.splice(random(0, songMarks.length), 1);
+    debug('歌曲放完了，准备随机放下一首歌曲 ', this._playlist[mark]);
   }
 
   /**
@@ -36,7 +35,7 @@ export default function proxy(playlists, setting) {
     // 对于这两个判断条件的解释：
     // 1、刚好在两个播放列表切换的时间点上
     // 2、由于在切换时发现旧的播放列表还有最后一首歌曲没播完，实际还没发生切换，要等最后一首歌end之后才能切换
-    if (this._uuid !== id || this._finalMusic) {
+    if (playlistUUID !== id || isFinal) {
       return true;
     }
     return false;
@@ -48,13 +47,13 @@ export default function proxy(playlists, setting) {
    * @returns {tracks|Function|*}
    */
   function change(newPl) {
-    const m = this._playlist ? this._playlist[this._currentIndex] : null;
+    const m = this._playlist ? this._playlist[mark] : null;
     if (m && m.howl && m.howl.playing()) {
-      if (!this._finalMusic) this._finalMusic = true;
+      if (!isFinal) isFinal = true;
       return this._playlist;
     }
     debug('当前播放的时段: %s~%s', newPl.startTm, newPl.endTm);
-    this._uuid = newPl.uuid;
+    playlistUUID = newPl.uuid;
     this._playlist = newPl.tracks; // 用新的播放列表替换，并重置索引，避免访问越界。
     setSong.apply(this); // 停止旧播放列表的播放
     return this._playlist;
@@ -68,14 +67,14 @@ export default function proxy(playlists, setting) {
     let start = null;
     let end = null;
     let now = null;
-    for (const playlist of this._plan) {
-      start = moment(playlist.startTm, 'HH:mm:ss');
-      end = moment(playlist.endTm, 'HH:mm:ss');
+    for (const pl of this._plan) {
+      start = moment(pl.startTm, 'HH:mm:ss');
+      end = moment(pl.endTm, 'HH:mm:ss');
       now = moment();
       if (start.isBefore(now) && end.isAfter(now)) {
-        if (canChange.apply(this, [playlist.uuid])) {
+        if (canChange.apply(this, [pl.uuid])) {
           // 判断是否是新旧播放列表的交替
-          return change.apply(this, [playlist]);
+          return change.apply(this, [pl]);
         }
         return this._playlist;
       }
@@ -85,12 +84,12 @@ export default function proxy(playlists, setting) {
 
   /**
    * 检查歌曲是否刷新
-   * @param playlist
+   * @param matchPl
    * @returns {*}
    */
-  function checkMusic(playlist) {
-    const currentMusic = this._currentMusic;
-    const music = { ...playlist[this._currentIndex] };
+  function checkMusic(matchPl) {
+    const currentMusic = this._music;
+    const music = { ...matchPl[mark] };
     if (currentMusic && currentMusic.md5 === music.md5) {
       return currentMusic;
     }
@@ -120,7 +119,7 @@ export default function proxy(playlists, setting) {
             end.apply(o);
             setSong.apply(o);
             (function completeFinalMusic() {
-              if (this._finalMusic) this._finalMusic = false;
+              if (isFinal) isFinal = false;
             }.apply(o));
           };
         case proxy.METHOD_GET_PLAYLIST:
@@ -131,9 +130,9 @@ export default function proxy(playlists, setting) {
         case proxy.METHOD_GET_MUSIC: {
           // debug(proxy.METHOD_GET_MUSIC);
           return function() {
-            const currPlaylist = findCanPlayList.apply(o);
-            if (currPlaylist) {
-              this._currentMusic = checkMusic.apply(o, [currPlaylist]);
+            const matchPl = findCanPlayList.apply(o);
+            if (matchPl) {
+              this._music = checkMusic.apply(o, [matchPl]);
               const findCanPlayMusic = o[k];
               return findCanPlayMusic;
             }

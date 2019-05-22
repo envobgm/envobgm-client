@@ -13,21 +13,6 @@ class PlaylistManager extends MusicManager {
     super(plan[0].tracks);
     this._setting = setting;
     this._plan = plan;
-    this._currentIndex = null;
-    this._currentMusic = null;
-    this._playlist = null;
-    this._uuid = null;
-
-    // 是否为最后一首歌（针对播放列表切换的问题，不能直接把当前歌曲停止。）
-    this._finalMusic = false;
-  }
-
-  get currentIndex() {
-    return this._currentIndex;
-  }
-
-  set currentIndex(index) {
-    this._currentIndex = index;
   }
 
   /**
@@ -54,9 +39,9 @@ class PlaylistManager extends MusicManager {
 
   findCanPlayMusic() {
     // @前置逻辑交由代理实现，目标方法只管返回歌曲对象
-    if (this._currentMusic && !this._currentMusic.howl) {
-      this._currentMusic.howl = musicFactory.createHowl({
-        src: [this._currentMusic.filePathName],
+    if (this._music && !this._music.howl) {
+      this._music.howl = musicFactory.createHowl({
+        src: [this._music.filePathName],
         autoplay: false,
         onload: this._onLoad.bind(this),
         onplay: this._onPlay.bind(this),
@@ -64,9 +49,9 @@ class PlaylistManager extends MusicManager {
         onpause: this._onPause.bind(this),
         onstop: this._onStop.bind(this)
       });
-      debug('创建howl实例：', this._currentMusic.howl);
+      debug('创建howl实例：', this._music.howl);
     }
-    return this._currentMusic;
+    return this._music;
   }
 
   _onLoad() {

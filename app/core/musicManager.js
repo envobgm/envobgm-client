@@ -9,7 +9,13 @@ const debug = require('debug')('musicManager');
 class MusicManager extends EventEmitter {
   constructor(playlist) {
     super();
-    this._playlist = Array.isArray(playlist) ? playlist : [playlist];
+
+    if (!Array.isArray(playlist)) {
+      throw new Error('playlist必须是一个数组');
+    }
+
+    this._playlist = playlist;
+    this._music = null;
     // howler event is late
     this._isLoading = false;
     this._isCompleted = true;
