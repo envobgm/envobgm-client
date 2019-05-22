@@ -37,14 +37,8 @@ class PlaylistManager extends MusicManager {
   updatePlaylist(newSong) {
     try {
       this._plan.every(pl => {
-        // 更新正在使用的播放列表
-        if (newSong.plUuid == this._uuid) {
-          debug('正在使用的播放列表加入新歌：', this.findCanPlayList());
-          this.findCanPlayList().push(newSong);
-          return false;
-        }
-        if (newSong.plUuid == pl.uuid && newSong.plUuid != this._uuid) {
-          debug('未使用的播放列表加入新歌：', pl.tracks);
+        if (newSong.plUuid == pl.uuid) {
+          debug('加入新歌：', pl.name, pl.tracks);
           pl.tracks.push(newSong);
           return false;
         }
