@@ -1,18 +1,16 @@
-/* eslint-disable no-shadow,func-names */
 import schedule from 'node-schedule';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import nedb from '../utils/dbUtil';
-
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
 
 const dbPath = path.join(os.homedir(), '.bgm', 'player.db');
 const cachePath = path.join(os.homedir(), '.bgm');
 
-const deleteFolderRecursive = function(path) {
-  if (fs.existsSync(path)) {
-    fs.readdirSync(path).forEach(file => {
-      const curPath = `${path}/${file}`;
+const deleteFolderRecursive = function(dirPath) {
+  if (fs.existsSync(dirPath)) {
+    fs.readdirSync(dirPath).forEach(file => {
+      const curPath = `${dirPath}/${file}`;
       if (fs.statSync(curPath).isDirectory()) {
         // recurse
         deleteFolderRecursive(curPath);
@@ -21,7 +19,7 @@ const deleteFolderRecursive = function(path) {
         fs.unlinkSync(curPath);
       }
     });
-    fs.rmdirSync(path);
+    fs.rmdirSync(dirPath);
   }
 };
 
