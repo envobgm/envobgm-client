@@ -13,6 +13,7 @@ import Progress from './components/progress';
 import Volume from './components/volume';
 import invokeClearTask from '../task/clearCacheTask';
 import Logic from './logic';
+import { version } from '../../package';
 
 const debug = Debug('player');
 
@@ -196,6 +197,7 @@ export default class Home extends Component {
             })(this)}
             <div style={dragRegionStyle} />
             <div className={ep.rightTopBtnsGroup}>
+              <span style={{ whiteSpace: 'nowrap' }}>v{version}</span>
               <Icon
                 onClick={this.onHide}
                 style={rightTopBtnStyle}

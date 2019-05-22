@@ -32,6 +32,7 @@ export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
+    // @see: https://blog.csdn.net/Wonder233/article/details/80563236
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
