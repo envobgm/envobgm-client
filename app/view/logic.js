@@ -29,7 +29,7 @@ export default class Logic {
     if (nedb.checkDBPath()) {
       const activeCode = await nedb.getActiveCode();
       const playerPlan = await nedb.getPlayerPlan();
-      // todo playerPlan = this._checkPlan(playerPlan);
+      // @TODO: 检查当天是否有可以使用的预缓存，并替换最新
       if (activeCode) {
         if (playerPlan) {
           const res = await this._checkCache(playerPlan);

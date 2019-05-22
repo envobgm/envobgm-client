@@ -38,7 +38,6 @@ const preparePlan = async date => {
       // 数据缓存
       const db = new Datastore({ filename: dbPath, autoload: true });
       db.insert({ playerPlan: mockData });
-      // todo 音轨缓存
     }
   } else {
     console.info('没事可做');

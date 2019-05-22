@@ -1,27 +1,26 @@
-/* eslint-disable no-unused-expressions,no-shadow,no-plusplus */
-import Debug from 'debug';
 import DownloadManager from './downloadManager';
 import nedb from '../utils/dbUtil';
 import { updateDailyPlan } from '../api/index';
 
-const debug = Debug('downloadJob');
+const debug = require('debug')('downloadJob');
 
 export default function doJob(date, callback) {
   let count = 0;
 
   async function job() {
     const unCached = await updateDailyPlan(date);
-    // todo 操，调试了一晚上，发现重试机制导致了callback && callback(100, true);这段代码调了N次
     if (unCached && unCached.length > 0) {
       const downloadManager = new DownloadManager();
       downloadManager.on(DownloadManager.PROGRESS, value => {
         if (value.result) {
-          callback &&
+          if (callback) {
+            count += 1;
             callback(
-              Math.round((++count / unCached.length) * 100),
+              Math.round((count / unCached.length) * 100),
               false,
               value.currentObj
             );
+          }
         }
       });
 
@@ -31,7 +30,7 @@ export default function doJob(date, callback) {
       // 3、可以增加重试次数防止一直做无用功。
       await downloadManager.downloadSeries(unCached);
     }
-    callback && callback(100, true);
+    if (callback) callback(100, true);
   }
 
   // 判断是否激活
@@ -45,8 +44,8 @@ export default function doJob(date, callback) {
       if (docs[0] && docs[0].activeCode) {
         try {
           await job();
-        } catch (err) {
-          debug('%O', err);
+        } catch (error) {
+          debug('%O', error);
         }
       }
     }

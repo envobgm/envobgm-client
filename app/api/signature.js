@@ -11,7 +11,7 @@ export default function calcSignature(dailyPlan, token) {
         plUuid: index,
         title: media.name,
         md5: media.etag,
-        file: client._signatureUrl(media.ossPath),
+        file: client.signatureUrl(media.ossPath),
         howl: null
       }))
     };
@@ -25,7 +25,7 @@ export default function calcSignature(dailyPlan, token) {
       dailyPlan.scrollAudioMessage.name ||
       oss.substring(oss.lastIndexOf('/') + 1),
     md5: dailyPlan.scrollAudioMessage.etag,
-    file: client._signatureUrl(dailyPlan.scrollAudioMessage.ossPath),
+    file: client.signatureUrl(dailyPlan.scrollAudioMessage.ossPath),
     howl: null
   };
 
@@ -36,7 +36,7 @@ export default function calcSignature(dailyPlan, token) {
       alarmTm: media.alarmTm,
       title: media.name || oss.substring(oss.lastIndexOf('/') + 1),
       md5: media.etag,
-      file: client._signatureUrl(media.ossPath),
+      file: client.signatureUrl(media.ossPath),
       howl: null
     };
   });
