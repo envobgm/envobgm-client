@@ -83,6 +83,20 @@ export default function proxy(playlists, setting) {
     return (this._playlist = null);
   }
 
+  /**
+   * 检查歌曲是否刷新
+   * @param playlist
+   * @returns {*}
+   */
+  function checkMusic(playlist) {
+    const currentMusic = this._currentMusic;
+    const music = { ...playlist[this._currentIndex] };
+    if (currentMusic && currentMusic.md5 === music.md5) {
+      return currentMusic;
+    }
+    return music;
+  }
+
   return new Proxy(new PlaylistManager(playlists, setting), {
     get(o, k) {
       switch (k) {
@@ -114,6 +128,17 @@ export default function proxy(playlists, setting) {
           return () => {
             return findCanPlayList.apply(o);
           };
+        case proxy.METHOD_GET_MUSIC: {
+          // debug(proxy.METHOD_GET_MUSIC);
+          return function() {
+            const currPlaylist = findCanPlayList.apply(o);
+            if (currPlaylist) {
+              this._currentMusic = checkMusic.apply(o, [currPlaylist]);
+              const findCanPlayMusic = o[k];
+              return findCanPlayMusic;
+            }
+          }.apply(o);
+        }
         default:
           return o[k];
       }
@@ -125,3 +150,4 @@ proxy.METHOD_STOP = 'stop';
 proxy.METHOD_PLAY = 'play';
 proxy.METHOD_END = '_onEnd';
 proxy.METHOD_GET_PLAYLIST = 'findCanPlayList';
+proxy.METHOD_GET_MUSIC = 'findCanPlayMusic';

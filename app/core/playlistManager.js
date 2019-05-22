@@ -49,20 +49,11 @@ class PlaylistManager extends MusicManager {
     }
   }
 
-  // @TODO: 暂时由代理模式实现，后续改为装饰器模式方式，理论上属于业务扩展
+  // @交由代理实现方法逻辑
   findCanPlayList() {}
 
   findCanPlayMusic() {
-    const currPlaylist = this.findCanPlayList();
-    if (!currPlaylist) return this._currentMusic || null;
-    // 单例模式
-    // MD5区分歌曲是否更新，这里MD5作为唯一标志
-    this._currentMusic = (function(currentMusic, music) {
-      if (currentMusic && currentMusic.md5 === music.md5) {
-        return currentMusic;
-      }
-      return music;
-    })(this._currentMusic, { ...currPlaylist[this._currentIndex] });
+    // @前置逻辑交由代理实现，目标方法只管返回歌曲对象
     if (this._currentMusic && !this._currentMusic.howl) {
       this._currentMusic.howl = musicFactory.createHowl({
         src: [this._currentMusic.filePathName],
