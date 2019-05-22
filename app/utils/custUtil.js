@@ -40,7 +40,7 @@ export function macAddr() {
     }
     // Windows
     else {
-      process.exec('ipconfig', (error, stdout, stderr) => {
+      process.exec('ipconfig/all', (error, stdout, stderr) => {
         if (error) {
           reject(stderr);
         }
