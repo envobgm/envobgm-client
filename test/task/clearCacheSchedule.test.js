@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { clearCache, invokeClearTask } from '../../app/task/clearCacheTask';
+import { invokeClearTask } from '../../app/task/clearCacheTask';
 
 describe('clearCacheSchedule', () => {
   const now = new Date('2019-05-30 20:59:00').getTime();
@@ -9,8 +9,7 @@ describe('clearCacheSchedule', () => {
     clock.tick(1000 * 60 * 2); // 过了两分钟
   });
 
-  it('test clearCache function', () => {
-    const res = clearCache();
-    expect(res).resolves.toEqual(true);
-  });
+  // it('test clearCache function', async () => {
+  //   await clearCache();
+  // });
 });
