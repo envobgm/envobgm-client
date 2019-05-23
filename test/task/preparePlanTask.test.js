@@ -1,15 +1,20 @@
 import sinon from 'sinon';
-import { invokePrepareTask, checkPlan } from '../../app/task/preparePlanTask';
+import { checkPlan, invokePrepareTask } from '../../app/task/preparePlanTask';
 
 describe('preparePlanTask', () => {
-  it('fire invokePrepareTask, and prepare plan successfully', () => {
+  it('test invokePrepareTask', () => {
     const now = new Date('2019-05-05 18:59:00').getTime();
     const clock = sinon.useFakeTimers(now);
     invokePrepareTask();
     clock.tick(1000 * 60 * 2);
+    clock.restore();
   });
 
   it('test checkPlan method', async () => {
-    await checkPlan();
+    const now = new Date('2019-05-23 18:59:00').getTime();
+    const clock = sinon.useFakeTimers(now);
+    const res = await checkPlan(new Date());
+    expect(res).toBe(false);
+    clock.restore();
   });
 });
