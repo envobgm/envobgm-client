@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-fetch';
+
 /**
  * 使用Promise封装Fetch，具有网络超时、请求终止的功能
  */

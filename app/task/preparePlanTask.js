@@ -6,7 +6,7 @@ import Datastore from 'nedb';
 import fs from 'fs';
 import DownloadManager from '../download/downloadManager';
 import nedb from '../utils/dbUtil';
-import { getDailyPlan } from '../api/index';
+import { getDailyPlan } from '../api';
 import { cherryUnCached, extractTracks } from '../api/cache';
 
 const debug = require('debug')('preparePlanTask');
@@ -59,14 +59,14 @@ export async function preparePlan() {
     const dbPath = path.join(
       os.homedir(),
       '.bgm',
-      `${moment().format('YYYY-MM-DD')}.db`
+      `${moment(plan.updateDate).format('YYYY-MM-DD')}.db`
     );
     // 缓存过的就不需要缓存
     if (!fs.existsSync(dbPath)) {
       // 数据缓存
       const db = new Datastore({ filename: dbPath, autoload: true });
-      db.insert({ activeCode });
-      db.insert({ playerPlan: plan });
+      await db.insert({ activeCode });
+      await db.insert({ playerPlan: plan });
       // 音轨缓存
       await downloadCache(plan);
       debug('缓存成功');
