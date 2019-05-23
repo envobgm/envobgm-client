@@ -9,7 +9,8 @@ import doJob from '../download/downloadJob';
 import calcSignedUrl from '../api/signature';
 import { cherryAll, extractTracks } from '../api/cache';
 
-// const debug = require('debug')('startProcessManager');
+const dm = new DownloadManager();
+const debug = require('debug')('startProcessManager');
 const { history } = require('../store/configureStore');
 
 export default class Logic {
@@ -18,7 +19,7 @@ export default class Logic {
     this._updateCfg = options.updateCfg;
     this._updateInfo = options.updateInfo;
     this._musicSchedule = null;
-    this._timerKey = null; // 计时器索引
+    this._interval = null; // 计时器索引
   }
 
   get musicSchedule() {
@@ -59,7 +60,6 @@ export default class Logic {
 
   async _downloadCache(res) {
     this._updateUI(true, '正在下载缓存');
-
     const {
       setting,
       playlists: { cachedPlaylists, unCachedPlaylists },
@@ -73,21 +73,54 @@ export default class Logic {
       }
     } = res;
 
-    // 语音类优先下载，否则容易招致错误！！
+    /**
+     * @TODO: 优化缓存逻辑
+     *  1.优先下载语音信息
+     *  2.如检测到歌曲下载为0，则先下载部分歌曲，优先提供播放
+     *  3.下载剩余歌曲
+     */
+    // 语音下载
     if (
       unCachedScrollAudioMessage.length > 0 ||
       unCachedAlarmAudioMessages.length > 0
     ) {
-      const dm = new DownloadManager();
+      this._updateUI(true, '正在下载语音');
+      debug('需要下载的语音缓存：', [
+        ...unCachedScrollAudioMessage,
+        ...unCachedAlarmAudioMessages
+      ]);
       await dm.downloadSeries([
         ...unCachedScrollAudioMessage,
         ...unCachedAlarmAudioMessages
       ]);
-      console.info('完成语音类别的track下载');
+      this._updateUI(false, '下载语音成功');
       await this.run();
       return;
     }
-    // 参数应该从props中拿到
+
+    // 缓存优先播放的音乐
+    const cachedPlaylistsTracks = cachedPlaylists.reduce((a, b) => {
+      if (b.tracks[0]) a.push(b.tracks[0]);
+      return a;
+    }, []);
+    if (cachedPlaylistsTracks.length === 0) {
+      const firstPatchSongs = unCachedPlaylists.map(pl => pl.tracks[0]);
+      debug('需要下载的优先播放缓存', firstPatchSongs);
+      this._updateUI(true, '优先缓存部分歌曲');
+      await dm.downloadSeries(firstPatchSongs);
+      this._updateUI(false, '缓存成功');
+      await this.run();
+      return;
+    }
+
+    // 下载剩余音乐
+    const unCachedTracks = extractTracks(unCachedPlaylists);
+    if (unCachedTracks.length > 0) {
+      debug('需要下载的剩余缓存', unCachedPlaylists);
+      this._execDownload();
+    }
+
+    // 初始化musicSchedule
     this._end();
     this._musicSchedule = new MusicSchedule(
       cachedPlaylists,
@@ -95,29 +128,8 @@ export default class Logic {
       cachedScrollAudioMessage,
       setting
     );
-    this._updateUI(false, '初始化完成');
+    this._updateUI(false, '缓存成功');
     this._updateCfg(setting.playerVolumn);
-
-    const currentPlaylist = this._musicSchedule._playlistManager.findCanPlayList();
-    if (!currentPlaylist) {
-      setTimeout(this.run.bind(this), 5000);
-    }
-
-    if (currentPlaylist.length === 0) {
-      const firstPatchSongs = unCachedPlaylists.map(pl => pl.tracks[0]);
-      console.info('第一批歌曲 ', firstPatchSongs);
-      const dm = new DownloadManager();
-      await dm.downloadSeries(firstPatchSongs);
-      await this.run();
-    } else {
-      const unCachedTracks = extractTracks(unCachedPlaylists);
-      if (unCachedTracks.length > 0) {
-        console.info('缓存有缺失，去下载');
-        this._execDownload();
-      } else {
-        console.info('啥事儿都不做...');
-      }
-    }
     this._start();
   }
 
@@ -149,31 +161,33 @@ export default class Logic {
   }
 
   _start() {
-    if (this._timerKey !== null) {
-      clearInterval(this._timerKey);
-      this._timerKey = null;
-    }
-
-    this._musicSchedule.start(3000);
-    this._timerKey = setInterval(() => {
-      if (this._musicSchedule._playlistManager.playing()) {
-        const currMusic = this._musicSchedule._playlistManager.findCanPlayMusic();
-        const currSeek = currMusic.howl.seek();
-        const currDuration = currMusic.howl.duration();
-        this._updateInfo(
-          currSeek,
-          (currSeek / currDuration) * 100,
-          currDuration
-        );
+    if (this._musicSchedule) {
+      if (this._interval !== null) {
+        clearInterval(this._interval);
+        this._interval = null;
       }
-    }, 500);
+
+      this._musicSchedule.start(3000);
+      this._interval = setInterval(() => {
+        if (this._musicSchedule._playlistManager.playing()) {
+          const currMusic = this._musicSchedule._playlistManager.findCanPlayMusic();
+          const currSeek = currMusic.howl.seek();
+          const currDuration = currMusic.howl.duration();
+          this._updateInfo(
+            currSeek,
+            (currSeek / currDuration) * 100,
+            currDuration
+          );
+        }
+      }, 500);
+    }
   }
 
   _end() {
     if (this._musicSchedule) {
       this._musicSchedule.end();
-      clearInterval(this._timerKey || 0);
-      this._timerKey = null;
+      clearInterval(this._interval || 0);
+      this._interval = null;
     }
   }
 }

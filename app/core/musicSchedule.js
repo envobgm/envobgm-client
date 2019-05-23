@@ -20,7 +20,7 @@ class MusicSchedule extends EventEmitter {
     this._alarmAudioManager = new AlarmAudioManager(alarmAudioMessages);
     this._scrollAudioManager = new ScrollAudioManager(scrollAudioMessage);
     this._setting = setting;
-    this._timeId = null;
+    this._interval = null;
     this._index = 0;
     this._showError = true;
 
@@ -135,21 +135,21 @@ class MusicSchedule extends EventEmitter {
   }
 
   start(i) {
-    if (this._timeId !== null) {
-      clearInterval(this._timeId);
-      this._timeId = null;
+    if (this._interval !== null) {
+      clearInterval(this._interval);
+      this._interval = null;
     }
 
     debug('start setInterval');
     const interval = i >= 100 && i <= 2000 ? i : 1000;
-    this._timeId = setInterval(this._run.bind(this), interval);
+    this._interval = setInterval(this._run.bind(this), interval);
   }
 
   end() {
     debug('clearInterval');
-    if (this._timeId) {
-      clearInterval(this._timeId);
-      this._timeId = null;
+    if (this._interval) {
+      clearInterval(this._interval);
+      this._interval = null;
       this._playlistManager.stop();
       this._scrollAudioManager.stop();
       this._alarmAudioManager.stop();
