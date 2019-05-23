@@ -11,7 +11,7 @@ import Switch from './components/switch';
 import Time from './components/time';
 import Progress from './components/progress';
 import Volume from './components/volume';
-import invokeClearTask from '../task/clearCacheTask';
+import { invokeClearTask } from '../task/clearCacheTask';
 import Logic from './logic';
 import { version } from '../../package';
 
