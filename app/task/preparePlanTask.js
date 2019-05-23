@@ -23,7 +23,7 @@ export async function downloadCache(plan) {
     unCachedPlaylists,
     unCachedScrollAudioMessage,
     unCachedAlarmAudioMessages
-  } = cherryUnCached(plan);
+  } = await cherryUnCached(plan);
   const allUnCached = [
     ...extractTracks(unCachedPlaylists),
     ...unCachedScrollAudioMessage,
