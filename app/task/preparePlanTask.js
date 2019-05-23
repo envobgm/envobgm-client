@@ -9,6 +9,8 @@ import DownloadManager from '../download/downloadManager';
 import nedb from '../utils/dbUtil';
 import { getDailyPlan } from '../api/index';
 
+const debug = require('debug')('preparePlanTask');
+
 const dm = new DownloadManager();
 
 const checkCache = async p => {
@@ -91,9 +93,11 @@ const preparePlan = async date => {
  * 预缓存作业，整点执行一次
  */
 export function invokePrepareTask() {
-  // 每月的30号晚上9点触发缓存清除任务
+  // 整点触发一次
   schedule.scheduleJob('0 0 * * * *', async () => {
+    debug('开始执行预缓存作业');
     await preparePlan();
+    debug('缓存成功');
   });
 }
 
@@ -108,15 +112,14 @@ export async function checkPlan() {
     `${moment().format('YYYY-MM-DD')}.db`
   );
   if (fs.existsSync(newPlanPath)) {
-    console.debug('发现新的播放计划');
-    const activeCode = await nedb.getActiveCode();
+    debug('发现新的播放计划：', newPlanPath);
     const planPath = nedb.dbPath;
     // 删除旧缓存
     fs.unlinkSync(planPath);
-    // 存储激活码
-    const db = new Datastore({ filename: newPlanPath, autoload: true });
-    db.insert({ activeCode });
+    debug('删除旧缓存：', planPath);
     // 重建缓存，新的播放计划替代旧的计划
     fs.renameSync(newPlanPath, planPath);
+  } else {
+    debug('没有新的播放计划：', newPlanPath);
   }
 }
