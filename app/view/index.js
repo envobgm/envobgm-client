@@ -11,7 +11,6 @@ import Switch from './components/switch';
 import Time from './components/time';
 import Progress from './components/progress';
 import Volume from './components/volume';
-import { invokeClearTask } from '../task/clearCacheTask';
 import Logic from './logic';
 import { version } from '../../package';
 
@@ -64,8 +63,6 @@ export default class Home extends Component {
     };
 
     ipcRenderer.send('resize', 500, 270);
-    // 启动定时清除缓存计划
-    invokeClearTask();
   }
 
   async componentWillMount() {

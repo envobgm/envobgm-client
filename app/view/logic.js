@@ -8,6 +8,7 @@ import MusicSchedule from '../core/musicSchedule';
 import doJob from '../download/downloadJob';
 import calcSignedUrl from '../api/signature';
 import { cherryAll, extractTracks } from '../api/cache';
+import { invokeClearTask } from '../task/clearCacheTask';
 
 const dm = new DownloadManager();
 const debug = require('debug')('startProcessManager');
@@ -20,6 +21,9 @@ export default class Logic {
     this._updateInfo = options.updateInfo;
     this._musicSchedule = null;
     this._interval = null; // 计时器索引
+
+    // 启动定时清除缓存计划
+    invokeClearTask();
   }
 
   get musicSchedule() {
