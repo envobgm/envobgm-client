@@ -50,10 +50,12 @@ export default class DownloadManager extends EventEmitter {
                 if (md5 != item.md5) {
                   obj.unCached.push(item);
                   fs.unlinkSync(item.filePathName);
+                  resolve();
+                } else {
+                  obj.cached.push(item);
+                  resolve();
                 }
               });
-              obj.cached.push(item);
-              resolve();
             } else {
               obj.unCached.push(item);
               resolve();
