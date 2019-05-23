@@ -51,7 +51,6 @@ export async function getCachedFiles() {
   return cachedFiles;
 }
 
-// @TODO: 现在是全部清空，容易招致BUG，后面可以选择性清空
 export async function clearCache() {
   await deleteCache(cachePath);
 }
