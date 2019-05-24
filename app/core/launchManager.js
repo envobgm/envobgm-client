@@ -7,6 +7,7 @@ import DownloadManager from '../download/downloadManager';
 import MusicSchedule from './musicSchedule';
 import doJob from '../download/downloadJob';
 import calcSignedUrl from '../api/signature';
+import routes from '../constants/routes';
 import { cherryAll, extractTracks } from '../api/cache';
 import { invokeClearTask } from '../task/clearCacheTask';
 
@@ -39,24 +40,22 @@ export default class LaunchManager {
       const playerPlan = await nedb.getPlayerPlan();
       // @TODO: 检查当天是否有可以使用的预缓存，并替换最新
       if (activeCode) {
-        if (playerPlan) {
-          const res = await this._checkCache(playerPlan);
-          await this._downloadCache(res);
-        } else {
+        let ret = playerPlan;
+        if (!ret) {
           const token = await getSTS();
           const dailyPlan = await getDailyPlan();
           if (!dailyPlan || !token) {
             throw new Error('获取token或者播放列表失败！');
           }
-          const ret = calcSignedUrl(dailyPlan, token);
+          ret = calcSignedUrl(dailyPlan, token);
           await nedb.insert({ playerPlan: ret });
-          const res = await this._checkCache(ret);
-          await this._downloadCache(res);
         }
-        return;
+        const res = await this._checkCache(ret);
+        await this._downloadCache(res);
       }
+    } else {
+      history.push(routes.ACTIVE);
     }
-    history.push('/active');
   }
 
   async _checkCache(p) {
