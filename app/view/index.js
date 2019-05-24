@@ -11,7 +11,7 @@ import Switch from './components/switch';
 import Time from './components/time';
 import Progress from './components/progress';
 import Volume from './components/volume';
-import Logic from './logic';
+import LaunchManager from '../core/launchManager';
 import { version } from '../../package';
 
 const debug = Debug('player');
@@ -65,7 +65,23 @@ export default class Home extends Component {
     ipcRenderer.send('resize', 500, 270);
   }
 
-  async componentWillMount() {
+  componentDidMount() {
+    this.start();
+  }
+
+  shouldComponentUpdate() {
+    if (this._startProcessManager) {
+      return true;
+    }
+    return false;
+  }
+
+  componentWillUnmount() {
+    this._startProcessManager._end();
+  }
+
+  // 启动流程
+  start = async () => {
     const options = {
       updateUI: (status, tips) =>
         this.setState({ loading: status, loadingText: tips }),
@@ -73,13 +89,9 @@ export default class Home extends Component {
       updateInfo: (seek, process, duration) =>
         this.setState({ seek, process, duration })
     };
-    this._startProcessManager = new Logic(options);
+    this._startProcessManager = new LaunchManager(options);
     await this._startProcessManager.run();
-  }
-
-  componentWillUnmount() {
-    this._startProcessManager._end();
-  }
+  };
 
   // 开关
   onSwitch = () => {
@@ -120,6 +132,34 @@ export default class Home extends Component {
     ipcRenderer.send('hide');
   };
 
+  // 加载缓存的UI
+  loadCacheUI = () => {
+    if (this._startProcessManager) {
+      const { loading, loadingText } = this.state;
+      const execDownload = this._startProcessManager._execDownload;
+      if (loading) {
+        return (
+          <div className={ep.leftTopBtnsGroup}>
+            <Icon style={leftTopBtnStyle} type="sync" spin />
+            <span className={ep.loadingText}>{loadingText}</span>
+          </div>
+        );
+      }
+      return (
+        <div
+          tabIndex="0"
+          role="button"
+          onClick={execDownload.bind(this._startProcessManager)}
+          onKeyDown={null}
+          className={ep.leftTopBtnsGroup}
+        >
+          <Icon style={leftTopBtnStyle} type="sync" />
+          <span className={ep.loadingText}>{loadingText}</span>
+        </div>
+      );
+    }
+  };
+
   render() {
     let { seek, duration, process } = this.state;
     /**
@@ -135,63 +175,7 @@ export default class Home extends Component {
       <div className={ep.container}>
         <header className={ep.albumart}>
           <section style={topStyle}>
-            {/* eslint-disable no-underscore-dangle */
-            /* eslint-disable
-            jsx-a11y/click-events-have-key-events */
-            /* eslint-disable
-            jsx-a11y/no-static-element-interactions */
-            /* eslint-disable
-            jsx-a11y/click-events-have-key-events */
-            /* eslint-disable
-            jsx-a11y/click-events-have-key-events */
-            /* eslint-disable
-            jsx-a11y/no-static-element-interactions */
-            /* eslint-disable
-            jsx-a11y/no-static-element-interactions */
-            /* eslint-disable
-            jsx-a11y/click-events-have-key-events */
-            /* eslint-disable
-            jsx-a11y/no-static-element-interactions */
-            /* eslint-disable
-            no-underscore-dangle */
-            /* eslint-disable
-            jsx-a11y/click-events-have-key-events */
-            /* eslint-disable
-            jsx-a11y/click-events-have-key-events */
-            /* eslint-disable
-            jsx-a11y/no-static-element-interactions */
-            /* eslint-disable
-            jsx-a11y/click-events-have-key-events */
-            /* eslint-disable
-            jsx-a11y/click-events-have-key-events */
-            /* eslint-disable
-            jsx-a11y/click-events-have-key-events */}
-            {(function(context) {
-              const { loading, loadingText } = context.state;
-              if (loading) {
-                return (
-                  <div className={ep.leftTopBtnsGroup}>
-                    <Icon style={leftTopBtnStyle} type="sync" spin />
-                    <span className={ep.loadingText}>{loadingText}</span>
-                  </div>
-                );
-              }
-              // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/click-events-have-key-events,jsx-a11y/click-events-have-key-events
-              return (
-                // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/click-events-have-key-events
-                // eslint-disable-next-line jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events
-                <div
-                  // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-                  onClick /* eslint-disable no-underscore-dangle */={context._startProcessManager._execDownload.bind(
-                    context._startProcessManager
-                  )}
-                  className={ep.leftTopBtnsGroup}
-                >
-                  <Icon style={leftTopBtnStyle} type="sync" />
-                  <span className={ep.loadingText}>{loadingText}</span>
-                </div>
-              );
-            })(this)}
+            {this.loadCacheUI()}
             <div style={dragRegionStyle} />
             <div className={ep.rightTopBtnsGroup}>
               <span style={{ whiteSpace: 'nowrap' }}>v{version}</span>

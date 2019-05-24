@@ -4,7 +4,7 @@ import { message } from 'antd/lib/index';
 import { getDailyPlan, getSTS } from '../api/index';
 import nedb from '../utils/dbUtil';
 import DownloadManager from '../download/downloadManager';
-import MusicSchedule from '../core/musicSchedule';
+import MusicSchedule from './musicSchedule';
 import doJob from '../download/downloadJob';
 import calcSignedUrl from '../api/signature';
 import { cherryAll, extractTracks } from '../api/cache';
@@ -14,7 +14,10 @@ const dm = new DownloadManager();
 const debug = require('debug')('startProcessManager');
 const { history } = require('../store/configureStore');
 
-export default class Logic {
+/**
+ * @TODO: UI更新这块后面选择用进程通讯的方式来做
+ */
+export default class LaunchManager {
   constructor(options) {
     this._updateUI = options.updateUI;
     this._updateCfg = options.updateCfg;
@@ -78,7 +81,6 @@ export default class Logic {
     } = res;
 
     /**
-     * @TODO: 优化缓存逻辑
      *  1.优先下载语音信息
      *  2.如检测到歌曲下载为0，则先下载部分歌曲，优先提供播放
      *  3.下载剩余歌曲
