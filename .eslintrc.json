@@ -9,13 +9,6 @@
   },
   "rules": {
     // 支持下划线标记
-    "no-underscore-dangle": [
-      "error",
-      {
-        "allowAfterThis": true,
-        "allowAfterSuper": true,
-        "enforceInMethodNames": true
-      }
-    ]
+    "no-underscore-dangle": "off"
   }
 }

@@ -12,6 +12,7 @@ import Time from './components/time';
 import Progress from './components/progress';
 import Volume from './components/volume';
 import LaunchManager from '../core/launchManager';
+import { Player, player } from '../core/pattern/observer/player';
 import { version } from '../../package';
 
 const debug = Debug('player');
@@ -62,7 +63,7 @@ export default class Home extends Component {
       loadingText: '检查更新'
     };
 
-    ipcRenderer.send('resize', 500, 270);
+    player._publish(Player.RESIZE_HOME_WIN);
   }
 
   componentDidMount() {
