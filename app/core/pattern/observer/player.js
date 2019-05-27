@@ -45,8 +45,16 @@ export class Player {
   }
 }
 
+// 页面窗口大小
 Player.RESIZE_ACTIVE_WIN = 'resizeActiveWin';
 Player.RESIZE_HOME_WIN = 'resizeHomeWin';
+
+// @TODO: 播放
+// @TODO: 停止
+// @TODO: 更新缓存
+// @TODO: 启动检查
+// @TODO: 定时清理缓存作业
+// @TODO: 定时准备缓存作业
 
 // 实例化播放器
 let singleton;
