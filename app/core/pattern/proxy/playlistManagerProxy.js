@@ -1,10 +1,12 @@
-/* eslint-disable no-underscore-dangle,no-param-reassign,no-restricted-syntax,no-return-assign */
-
+/* eslint-disable no-return-assign,no-restricted-syntax */
 import moment from 'moment';
 import PlaylistManager from '../../playlistManager';
 import { random } from '../../../utils/custUtil';
+import MusicFactory from '../factory/musicFactory';
 
 const debug = require('debug')('playlistManagerProxy');
+
+const musicFactory = new MusicFactory();
 
 /**
  * 播放列表管理器代理
@@ -64,16 +66,13 @@ export default function proxy(playlists, setting) {
    * @returns {*}
    */
   function findCanPlayList() {
-    let start = null;
-    let end = null;
-    let now = null;
+    const now = moment();
     for (const pl of this._plan) {
-      start = moment(pl.startTm, 'HH:mm:ss');
-      end = moment(pl.endTm, 'HH:mm:ss');
-      now = moment();
-      if (start.isBefore(now) && end.isAfter(now)) {
+      if (
+        moment(pl.startTm, 'HH:mm:ss').isBefore(now) &&
+        moment(pl.endTm, 'HH:mm:ss').isAfter(now)
+      ) {
         if (canChange.apply(this, [pl.uuid])) {
-          // 判断是否是新旧播放列表的交替
           return change.apply(this, [pl]);
         }
         return this._playlist;
@@ -96,6 +95,26 @@ export default function proxy(playlists, setting) {
     return music;
   }
 
+  /**
+   * 查找当前播放的音乐对象
+   * @returns {*|null}
+   */
+  function findCanPlayMusic() {
+    // @前置逻辑交由代理实现，目标方法只管返回歌曲对象
+    if (this._music && !this._music.howl) {
+      this._music.howl = musicFactory.createHowl({
+        src: [this._music.filePathName],
+        autoplay: false,
+        onload: this._onLoad.bind(this),
+        onplay: this._onPlay.bind(this),
+        onend: this._onEnd.bind(this),
+        onpause: this._onPause.bind(this),
+        onstop: this._onStop.bind(this)
+      });
+      debug('创建howl实例：', this._music.howl);
+    }
+    return this._music;
+  }
   return new Proxy(new PlaylistManager(playlists, setting), {
     get(o, k) {
       switch (k) {
@@ -123,18 +142,15 @@ export default function proxy(playlists, setting) {
             }.apply(o));
           };
         case proxy.METHOD_GET_PLAYLIST:
-          // debug(proxy.METHOD_GET_PLAYLIST);
           return () => {
             return findCanPlayList.apply(o);
           };
         case proxy.METHOD_GET_MUSIC: {
-          // debug(proxy.METHOD_GET_MUSIC);
           return function() {
             const matchPl = findCanPlayList.apply(o);
             if (matchPl) {
               this._music = checkMusic.apply(o, [matchPl]);
-              const findCanPlayMusic = o[k];
-              return findCanPlayMusic;
+              return findCanPlayMusic.bind(o);
             }
           }.apply(o);
         }

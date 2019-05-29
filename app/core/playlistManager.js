@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle,no-plusplus,no-return-assign,eqeqeq,no-restricted-syntax,no-param-reassign,class-methods-use-this,func-names */
 import message from 'antd/lib/message';
 import MusicManager from './musicManager';
 import MusicFactory from './pattern/factory/musicFactory';
@@ -22,7 +21,7 @@ class PlaylistManager extends MusicManager {
   updatePlaylist(newSong) {
     try {
       this._plan.every(pl => {
-        if (newSong.plUuid == pl.uuid) {
+        if (newSong.plUuid === pl.uuid) {
           debug('加入新歌：', pl.name, pl.tracks);
           pl.tracks.push(newSong);
           return false;
@@ -35,10 +34,16 @@ class PlaylistManager extends MusicManager {
   }
 
   // @交由代理实现方法逻辑
-  findCanPlayList() {}
+  findCanPlayList() {
+    return this._playlist;
+  }
 
+  // @交由代理实现方法逻辑
   findCanPlayMusic() {
-    // @前置逻辑交由代理实现，目标方法只管返回歌曲对象
+    if (!this._music) {
+      const [song] = this.findCanPlayList();
+      this._music = song;
+    }
     if (this._music && !this._music.howl) {
       this._music.howl = musicFactory.createHowl({
         src: [this._music.filePathName],

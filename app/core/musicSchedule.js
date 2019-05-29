@@ -9,6 +9,7 @@ import EventEmitter from 'events';
 import MusicManager from './musicManager';
 import AlarmAudioManager from './alarmAudioManager';
 import ScrollAudioManager from './scrollAudioManager';
+// import PlaylistManager from './playlistManager';
 import playlistManagerProxy from './pattern/proxy/playlistManagerProxy';
 
 const debug = Debug('MusicSchedule');
