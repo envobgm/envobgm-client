@@ -4,8 +4,12 @@ import netUtil from '../utils/netUtil';
 import { macAddr as getMacAddr } from '../utils/custUtil';
 import { cherryUnCached, combineAllUnCached } from './cache';
 import rebuildDB from './rebuildDB';
+import ApiProxy from './apiProxy';
 
 const debug = require('debug')('api');
+
+// 运用代理模式处理status & errorMessage
+const fetchRequest = new ApiProxy();
 
 /**
  * 注册码激活
@@ -14,7 +18,7 @@ const debug = require('debug')('api');
  */
 export const active = async licence => {
   const macAddr = await getMacAddr();
-  const res = await netUtil.fetchRequest(
+  const res = await fetchRequest(
     '/envo/api/v1/brandStore/active',
     netUtil.PATCH,
     { licence, macAddr }
@@ -30,7 +34,7 @@ export const active = async licence => {
  */
 export const getDailyPlan = async specDate => {
   const date = moment(specDate).format('YYYY-MM-DD');
-  const res = await netUtil.fetchRequest(
+  const res = await fetchRequest(
     `/envo/api/v1/brandStore/playInfo?date=${date}`
   );
   debug('getDailyPlan请求结果：', res);
@@ -43,7 +47,7 @@ export const getDailyPlan = async specDate => {
  * @returns {Promise<*>}
  */
 export const getSTS = async () => {
-  const res = await netUtil.fetchRequest('/envo/api/v1/brandStore/sts');
+  const res = await fetchRequest('/envo/api/v1/brandStore/sts');
   debug('getSTS请求结果：', res);
   res.data.region = 'oss-cn-shanghai';
   return res.data;

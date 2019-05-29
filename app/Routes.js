@@ -8,7 +8,7 @@ import ActivePage from './view/active';
 export default () => (
   <App>
     <Switch>
-      <Route path="/active" component={ActivePage} />
+      <Route path={routes.ACTIVE} component={ActivePage} />
       <Route path={routes.HOME} component={HomePage} />
     </Switch>
   </App>
