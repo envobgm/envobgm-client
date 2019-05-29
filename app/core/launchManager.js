@@ -10,6 +10,7 @@ import calcSignedUrl from '../api/signature';
 import routes from '../constants/routes';
 import { cherryAll, extractTracks } from '../api/cache';
 import { invokeClearTask } from '../task/clearCacheTask';
+import { invokePrepareTask } from '../task/preparePlanTask';
 
 const dm = new DownloadManager();
 const debug = require('debug')('startProcessManager');
@@ -26,8 +27,10 @@ export default class LaunchManager {
     this._musicSchedule = null;
     this._interval = null; // 计时器索引
 
-    // 启动定时清除缓存计划
+    // 定时清除缓存作业
     invokeClearTask();
+    // 定时预先缓存作业
+    invokePrepareTask();
   }
 
   get musicSchedule() {

@@ -90,6 +90,7 @@ export async function preparePlan() {
  */
 export function invokePrepareTask() {
   // 整点触发一次
+  debug('启动定时预缓存作业');
   schedule.scheduleJob('0 0 * * * *', async () => {
     debug('开始执行预缓存作业');
     await preparePlan();

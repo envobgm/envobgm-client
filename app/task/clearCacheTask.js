@@ -60,6 +60,7 @@ export async function clearCache() {
  */
 export function invokeClearTask() {
   // 每月的30号晚上9点触发缓存清除任务
+  debug('启动定时清除缓存作业');
   schedule.scheduleJob('0 0 21 30 * *', async () => {
     debug('开始执行清除缓存作业');
     await clearCache();
