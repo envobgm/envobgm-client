@@ -1,12 +1,11 @@
 // @flow
-/* eslint-disable react/destructuring-assignment,react/jsx-no-comment-textnodes,no-underscore-dangle,react/no-unused-state */
 import React, { Component } from 'react';
 import { Icon } from 'antd';
 import Debug from 'debug';
 import { Howler } from 'howler';
 import { ipcRenderer } from 'electron';
-import ep from './index.css';
-import logo from '../image/logo.svg';
+import st from './index.css';
+import logo from '../static/img/logo.svg';
 import Switch from './components/switch';
 import Time from './components/time';
 import Progress from './components/progress';
@@ -14,33 +13,9 @@ import Volume from './components/volume';
 import LaunchManager from '../core/launchManager';
 import { Player, player } from '../core/pattern/observer/player';
 import { version } from '../../package';
+import ipcs from '../constants/ipcs';
 
 const debug = Debug('player');
-
-const topStyle = {
-  padding: '0.1rem 0.5rem',
-  display: 'flex',
-  flexDirection: 'row',
-  backgroundColor: 'transparent',
-  height: '25px',
-  justifyContent: 'space-between'
-};
-const dragRegionStyle = {
-  zIndex: 99,
-  width: '100%',
-  height: '100%',
-  WebkitAppRegion: 'drag',
-  WebkitUserSelect: 'none'
-};
-const rightTopBtnStyle = {
-  fontSize: 16,
-  zIndex: 100,
-  marginLeft: 8
-};
-const leftTopBtnStyle = {
-  fontSize: 16,
-  zIndex: 100
-};
 
 export default class Home extends Component {
   constructor(props) {
@@ -49,11 +24,6 @@ export default class Home extends Component {
     this._startProcessManager = null;
 
     this.state = {
-      brand: 'Unknown Brand', // 品牌
-      branchStore: 'Unknown Branch Store', // 分店名称
-      currentPlaylist: 'Unknown Playlist', // 当前歌单
-      currentArtist: 'Unknown Artist', // 当前作者
-      currentSong: 'Unknown Song', // 当前歌曲
       open: true,
       process: 0,
       duration: 0,
@@ -96,7 +66,8 @@ export default class Home extends Component {
 
   // 开关
   onSwitch = () => {
-    if (!this.state.open) {
+    const { open } = this.state;
+    if (!open) {
       this.onPlay();
     } else {
       this.onPause();
@@ -125,12 +96,12 @@ export default class Home extends Component {
 
   // 关闭播放器
   onClose = () => {
-    ipcRenderer.send('close');
+    ipcRenderer.send(ipcs.CLOSE);
   };
 
   // 隐藏/最小化
   onHide = () => {
-    ipcRenderer.send('hide');
+    ipcRenderer.send(ipcs.HIDE);
   };
 
   // 加载缓存的UI
@@ -140,9 +111,9 @@ export default class Home extends Component {
       const execDownload = this._startProcessManager._execDownload;
       if (loading) {
         return (
-          <div className={ep.leftTopBtnsGroup}>
-            <Icon style={leftTopBtnStyle} type="sync" spin />
-            <span className={ep.loadingText}>{loadingText}</span>
+          <div className={st.leftTopBtnsGroup}>
+            <Icon className={st.leftTopBtnStyle} type="sync" spin />
+            <span className={st.loadingText}>{loadingText}</span>
           </div>
         );
       }
@@ -152,16 +123,17 @@ export default class Home extends Component {
           role="button"
           onClick={execDownload.bind(this._startProcessManager)}
           onKeyDown={null}
-          className={ep.leftTopBtnsGroup}
+          className={st.leftTopBtnsGroup}
         >
-          <Icon style={leftTopBtnStyle} type="sync" />
-          <span className={ep.loadingText}>{loadingText}</span>
+          <Icon className={st.leftTopBtnStyle} type="sync" />
+          <span className={st.loadingText}>{loadingText}</span>
         </div>
       );
     }
   };
 
   render() {
+    const { volume, open } = this.state;
     let { seek, duration, process } = this.state;
     /**
      * 还不知道啥原因，howl返回的类型不对
@@ -173,45 +145,37 @@ export default class Home extends Component {
     })();
 
     return (
-      <div className={ep.container}>
-        <header className={ep.albumart}>
-          <section style={topStyle}>
+      <div className={st.container}>
+        <header className={st.albumart}>
+          <section className={st.topStyle}>
             {this.loadCacheUI()}
-            <div style={dragRegionStyle} />
-            <div className={ep.rightTopBtnsGroup}>
+            <div className={st.rightTopBtnsGroup}>
               <span style={{ whiteSpace: 'nowrap' }}>v{version}</span>
               <Icon
                 onClick={this.onHide}
-                style={rightTopBtnStyle}
+                className={st.rightTopBtnStyle}
                 type="minus-square"
               />
               <Icon
                 onClick={this.onClose}
-                style={rightTopBtnStyle}
+                className={st.rightTopBtnStyle}
                 type="close-square"
               />
             </div>
           </section>
-          <div className={ep.profile} style={dragRegionStyle}>
-            <div className={ep.currentInfo}>
-              {/* <p>{this.state.brand}</p> */}
-              {/* <p>{this.state.branchStore}</p> */}
-            </div>
-            <img src={logo} className={ep.logo} alt="logo" />
-            <div className={ep.currentInfo}>
-              {/* <p>{this.state.currentPlaylist}</p> */}
-              {/* <p>{this.state.currentArtist}</p> */}
-              {/* <p>{this.state.currentSong}</p> */}
-            </div>
+          <div className={st.profile}>
+            <div className={st.currentInfo} />
+            <img src={logo} className={st.logo} alt="logo" />
+            <div className={st.currentInfo} />
           </div>
         </header>
-        <section className={ep.ctrlWrapper}>
-          <div className={ep.controls}>
+        <section className={st.ctrlWrapper}>
+          <div className={st.controls}>
             <Time secs={seek} />
             <Progress process={process} />
             <Time secs={duration} />
-            <Volume volume={this.state.volume} onChange={this.onVolume} />
-            <Switch open={this.state.open} onSwitch={this.onSwitch} />
+            <Volume volume={volume} onChange={this.onVolume} />
+            <Switch open={open} onSwitch={this.onSwitch} />
           </div>
         </section>
       </div>

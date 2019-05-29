@@ -1,3 +1,23 @@
+.topStyle {
+  padding: 0.1rem 0.5rem;
+  display: flex;
+  flex-direction: row;
+  background-color: transparent;
+  height: 25px;
+  justify-content: space-between;
+}
+
+.leftTopBtnStyle {
+  font-size: 16px;
+  z-index: 100;
+}
+
+.rightTopBtnStyle {
+  font-size: 16px;
+  z-index: 100;
+  margin-left: 8px;
+}
+
 .container {
   text-align: center;
   height: 100%;
@@ -34,10 +54,7 @@
 }
 
 .albumart {
-  /* background: url(https://d3rt1990lpmkn.cloudfront.net/640/bd2d46d98685bbb9f438d426aaa80289c3162e5f) 50%; */
-
-  /* background-color: #222; */
-  background: url(../image/back.jpeg) no-repeat;
+  background: url(../static/img/back.jpeg) no-repeat;
   background-size: cover;
   height: 70%;
   padding-top: 3px;

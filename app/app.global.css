@@ -21,8 +21,3 @@ li {
 #root {
   height: 100%;
 }
-
-/* #rewrite antd css */
-.ant-progress-circle .ant-progress-text {
-  color: #f5f5f5;
-}

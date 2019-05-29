@@ -228,9 +228,9 @@ app.on('ready', async () => {
       mainWindow.center();
     });
     // 窗口最小化
-    ipcMain.on(ipcs.HIDE, mainWindow.minimize.bind(this));
+    ipcMain.on(ipcs.HIDE, mainWindow.minimize.bind(mainWindow));
     // 窗口最大化
-    ipcMain.on(ipcs.MAXIMIZE, mainWindow.maximize.bind(this));
+    ipcMain.on(ipcs.MAXIMIZE, mainWindow.maximize.bind(mainWindow));
   })();
 
   // Remove this if your app does not use auto updates
