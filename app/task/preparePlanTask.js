@@ -6,8 +6,9 @@ import Datastore from 'nedb';
 import fs from 'fs';
 import DownloadManager from '../download/downloadManager';
 import nedb from '../utils/dbUtil';
-import { getDailyPlan } from '../api';
+import { getDailyPlan, getSTS } from '../api';
 import { cherryUnCached, extractTracks } from '../api/cache';
+import calcSignedUrl from '../api/signature';
 
 const debug = require('debug')('preparePlanTask');
 
@@ -50,7 +51,9 @@ export async function preparePlan() {
   debug(
     `今天${moment().format('DD')}号，查看${planDate.format('DD')}号有无更新计划`
   );
-  const plan = await getDailyPlan(planDate);
+  let plan = await getDailyPlan(planDate);
+  const token = await getSTS();
+  plan = calcSignedUrl(plan, token);
   const cachePlan = await nedb.getPlayerPlan();
   const activeCode = await nedb.getActiveCode();
   if (
@@ -62,7 +65,7 @@ export async function preparePlan() {
     const dbPath = path.join(
       os.homedir(),
       '.bgm',
-      `${moment(plan.updateDate).format('YYYY-MM-DD')}.db`
+      `${moment(plan.setting.updateInstant).format('YYYY-MM-DD')}.db`
     );
     // 缓存过的就不需要缓存
     if (!fs.existsSync(dbPath)) {

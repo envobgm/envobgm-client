@@ -1,4 +1,4 @@
-/* eslint-disable no-var,vars-on-top,new-cap,no-plusplus,block-scoped-var,import/order */
+/* eslint-disable no-unused-vars,block-scoped-var,no-var,vars-on-top,no-plusplus,import/order,new-cap,global-require */
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
@@ -28,6 +28,8 @@ const _dbUtil = _interopRequireDefault(require('../es5-build/dbUtil'));
 const _api = require('../es5-build/api');
 
 const _cache = require('../es5-build/cache');
+
+const _signature = _interopRequireDefault(require('../es5-build/signature'));
 
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
@@ -106,7 +108,9 @@ async function preparePlan() {
         '\u53F7\u6709\u65E0\u66F4\u65B0\u8BA1\u5212'
       )
   );
-  const plan = await (0, _api.getDailyPlan)(planDate);
+  const plan = require('./mockData').playerPlan;
+  // var token = await (0, _api.getSTS)();
+  // plan = (0, _signature.default)(plan, token);
   const cachePlan = await _dbUtil.default.getPlayerPlan();
   const activeCode = await _dbUtil.default.getActiveCode();
 
@@ -121,7 +125,7 @@ async function preparePlan() {
       _os.default.homedir(),
       '.bgm',
       ''.concat(
-        (0, _moment.default)(plan.updateDate).format('YYYY-MM-DD'),
+        (0, _moment.default)(plan.setting.updateInstant).format('YYYY-MM-DD'),
         '.db'
       )
     ); // 缓存过的就不需要缓存
