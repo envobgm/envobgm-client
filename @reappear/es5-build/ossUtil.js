@@ -1,4 +1,4 @@
-/* eslint-disable no-void,no-underscore-dangle,no-plusplus,no-shadow */
+/* eslint-disable no-shadow,no-plusplus,no-void */
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
@@ -44,15 +44,21 @@ const Client = OSS;
 const OssUtil =
   /* #__PURE__ */
   (function() {
-    function OssUtil(token) {
+    function OssUtil(_ref) {
+      const { region } = _ref;
+      const { bucket } = _ref;
+      const { accessKeyId } = _ref;
+      const { accessKeySecret } = _ref;
+      const { securityToken } = _ref;
+
       _classCallCheck(this, OssUtil);
 
       this._store = new Client({
-        region: token.Region,
-        bucket: token.Bucket,
-        accessKeyId: token.AccessKeyId,
-        accessKeySecret: token.AccessKeySecret,
-        stsToken: token.SecurityToken
+        region,
+        bucket,
+        accessKeyId,
+        accessKeySecret,
+        stsToken: securityToken
       });
     }
     /**

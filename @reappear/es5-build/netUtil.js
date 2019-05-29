@@ -1,10 +1,12 @@
-/* eslint-disable no-underscore-dangle,no-plusplus,no-param-reassign,no-shadow,prefer-rest-params,no-void */
+/* eslint-disable no-void,no-plusplus,no-param-reassign,no-shadow,prefer-rest-params */
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
 exports.default = void 0;
 
 const _isomorphicFetch = _interopRequireDefault(require('isomorphic-fetch'));
+
+const _custUtil = require('./custUtil');
 
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
@@ -77,11 +79,15 @@ const NetUtil =
          * data : 参数(Json对象)
          * callback : 回调函数
          * */
-        value: function fetchRequest(url, method, params) {
+        value: async function fetchRequest(url, method, params) {
+          if (!NetUtil.xMac) {
+            NetUtil.xMac = await (0, _custUtil.macAddr)();
+          }
+
           const header = {
             Accept: 'application/json',
             'Content-Type': 'application/json;charset=UTF-8',
-            accesstoken: NetUtil.token
+            'X-Mac': NetUtil.xMac
           };
           let promise = null;
 
@@ -173,16 +179,14 @@ _defineProperty(
   'baseUrl',
   (function getBaseUrl() {
     if (process.env.NODE_ENV === 'production') {
-      return 'http://47.100.161.213:10080'; // 生产
+      return 'http://47.103.63.249'; // 生产
     }
 
-    if (process.env.NODE_ENV === 'development') {
-      return 'http://47.100.161.213:10080'; // 测试
-    }
+    return 'http://47.103.63.249'; // 测试
   })()
 );
 
-_defineProperty(NetUtil, 'token', '');
+_defineProperty(NetUtil, 'xMac', void 0);
 
 NetUtil.POST = 'post';
 NetUtil.GET = 'get';

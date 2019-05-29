@@ -1,0 +1,9 @@
+{
+  "SERVER_ERROR": "服务器错误",
+  "OPTION_FAILED": "操作错误",
+  "PARAM_ERROR": "传参错误",
+  "STS_GET_FAILED": "STS获取失败",
+  "NO_PLAYER_INFO": "播放器信息不存在",
+  "UNAUTHORIZED": "未授权",
+  "ACTIVATED": "已激活"
+}

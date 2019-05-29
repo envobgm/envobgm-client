@@ -12,11 +12,12 @@ const debug = require('debug')('api');
  * @param activeCode
  * @returns {Promise<void>}
  */
-export const active = async activeCode => {
-  const mac = await getMacAddr();
+export const active = async licence => {
+  const macAddr = await getMacAddr();
   const res = await netUtil.fetchRequest(
-    `/siteapi/${mac}/active/${activeCode}`,
-    netUtil.PUT
+    '/envo/api/v1/brandStore/active',
+    netUtil.PATCH,
+    { licence, macAddr }
   );
   debug('active请求结果：', res);
   return res;
@@ -28,13 +29,13 @@ export const active = async activeCode => {
  * @returns {Promise<*>}
  */
 export const getDailyPlan = async specDate => {
-  const mac = await getMacAddr();
   const date = moment(specDate).format('YYYY-MM-DD');
   const res = await netUtil.fetchRequest(
-    `/siteapi/${mac}/playerInfo?date=${date}`
+    `/envo/api/v1/brandStore/playInfo?date=${date}`
   );
   debug('getDailyPlan请求结果：', res);
-  return res.content.dailyPlan;
+  const { data: dailyPlan } = res;
+  return dailyPlan;
 };
 
 /**
@@ -42,13 +43,10 @@ export const getDailyPlan = async specDate => {
  * @returns {Promise<*>}
  */
 export const getSTS = async () => {
-  const mac = await getMacAddr();
-  const res = await netUtil.fetchRequest(
-    `/ossapi/requestDownloadAK/${mac}`,
-    netUtil.POST
-  );
+  const res = await netUtil.fetchRequest('/envo/api/v1/brandStore/sts');
   debug('getSTS请求结果：', res);
-  return res.content.token;
+  res.data.region = 'oss-cn-shanghai';
+  return res.data;
 };
 
 /**

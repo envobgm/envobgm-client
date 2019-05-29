@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle,no-unused-vars,no-var,vars-on-top,block-scoped-var,import/order,new-cap,no-plusplus,global-require */
+/* eslint-disable no-var,vars-on-top,new-cap,no-plusplus,block-scoped-var,import/order */
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
@@ -106,13 +106,13 @@ async function preparePlan() {
         '\u53F7\u6709\u65E0\u66F4\u65B0\u8BA1\u5212'
       )
   );
-  const plan = await require('./mockData').playerPlan;
+  const plan = await (0, _api.getDailyPlan)(planDate);
   const cachePlan = await _dbUtil.default.getPlayerPlan();
   const activeCode = await _dbUtil.default.getActiveCode();
 
   if (
-    (0, _moment.default)(cachePlan.updateDate).unix() <
-    (0, _moment.default)(plan.updateDate).unix()
+    (0, _moment.default)(cachePlan.setting.updateInstant).unix() <
+    (0, _moment.default)(plan.setting.updateInstant).unix()
   ) {
     debug('发现新的播放计划 ', plan);
     debug('正在进行预加载...');

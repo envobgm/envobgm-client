@@ -3,13 +3,13 @@ const OSS = require('ali-oss');
 const Client = OSS;
 
 export default class OssUtil {
-  constructor(token) {
+  constructor({ region, bucket, accessKeyId, accessKeySecret, securityToken }) {
     this._store = new Client({
-      region: token.Region,
-      bucket: token.Bucket,
-      accessKeyId: token.AccessKeyId,
-      accessKeySecret: token.AccessKeySecret,
-      stsToken: token.SecurityToken
+      region,
+      bucket,
+      accessKeyId,
+      accessKeySecret,
+      stsToken: securityToken
     });
   }
 

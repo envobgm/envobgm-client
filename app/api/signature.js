@@ -1,42 +1,64 @@
-/* eslint-disable no-underscore-dangle */
+import moment from 'moment';
 import OssUtil from '../utils/ossUtil';
 
 export default function calcSignature(dailyPlan, token) {
   const client = new OssUtil(token);
-  const playlists = dailyPlan.playlists.map((playlist, index) => {
+  const {
+    playerConfig: {
+      fadeInTime,
+      fadeOutTime,
+      playStartTime,
+      playEndTime,
+      playVolume,
+      updateInstant
+    },
+    playLists,
+    audioCutConfigs,
+    audioCarouselConfig
+  } = dailyPlan;
+
+  // 播放列表
+  const playlists = playLists.map(playlist => {
     return {
-      ...playlist,
-      uuid: index,
-      tracks: playlist.tracks.map(media => ({
-        plUuid: index,
-        title: media.name,
-        md5: media.etag,
-        file: client.signatureUrl(media.ossPath),
+      startTm: moment(playlist.startTime)
+        .utcOffset(-360)
+        .format('HH:mm:ss'),
+      endTm: moment(playlist.endTime)
+        .utcOffset(-360)
+        .format('HH:mm:ss'),
+      uuid: playlist.id,
+      tracks: playlist.tracks.map(({ name, etag, url }) => ({
+        plUuid: playlist.id,
+        title: `${name}.mp3`,
+        md5: etag,
+        file: client.signatureUrl(url),
         howl: null
       }))
     };
   });
 
   // 轮播语音
-  let oss = dailyPlan.scrollAudioMessage.ossPath;
   const scrollAudioMessage = {
-    frequency: dailyPlan.scrollAudioMessage.frequency,
-    title:
-      dailyPlan.scrollAudioMessage.name ||
-      oss.substring(oss.lastIndexOf('/') + 1),
-    md5: dailyPlan.scrollAudioMessage.etag,
-    file: client.signatureUrl(dailyPlan.scrollAudioMessage.ossPath),
+    frequency: audioCarouselConfig.frequency,
+    title: `${audioCarouselConfig.audio.name}.mp3`,
+    md5: audioCarouselConfig.audio.etag,
+    file: client.signatureUrl(audioCarouselConfig.audio.url),
     howl: null
   };
 
   // 插播语音
-  const alarmAudioMessages = dailyPlan.alarmAudioMessages.map(media => {
-    oss = media.ossPath;
+  const alarmAudioMessages = audioCutConfigs.map(media => {
+    const {
+      cutTime,
+      audio: { name, etag, url }
+    } = media;
     return {
-      alarmTm: media.alarmTm,
-      title: media.name || oss.substring(oss.lastIndexOf('/') + 1),
-      md5: media.etag,
-      file: client.signatureUrl(media.ossPath),
+      alarmTm: moment(cutTime)
+        .utcOffset(-360)
+        .format('HH:mm:ss'),
+      title: `${name}.mp3`,
+      md5: etag,
+      file: client.signatureUrl(url),
       howl: null
     };
   });
@@ -45,7 +67,17 @@ export default function calcSignature(dailyPlan, token) {
     playlists,
     scrollAudioMessage,
     alarmAudioMessages,
-    setting: dailyPlan.setting,
-    site: dailyPlan.site
+    setting: {
+      playerStartTm: moment(playStartTime)
+        .utcOffset(-360)
+        .format('HH:mm:ss'),
+      playerEndTm: moment(playEndTime)
+        .utcOffset(-360)
+        .format('HH:mm:ss'),
+      playerVolumn: playVolume,
+      fadeInTm: fadeInTime,
+      fadeOutTm: fadeOutTime,
+      updateInstant: updateInstant * 1000
+    }
   };
 }

@@ -53,7 +53,10 @@ export async function preparePlan() {
   const plan = await getDailyPlan(planDate);
   const cachePlan = await nedb.getPlayerPlan();
   const activeCode = await nedb.getActiveCode();
-  if (moment(cachePlan.updateDate).unix() < moment(plan.updateDate).unix()) {
+  if (
+    moment(cachePlan.setting.updateInstant).unix() <
+    moment(plan.setting.updateInstant).unix()
+  ) {
     debug('发现新的播放计划 ', plan);
     debug('正在进行预加载...');
     const dbPath = path.join(

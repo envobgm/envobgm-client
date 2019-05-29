@@ -61,7 +61,7 @@ export default class LaunchManager {
   async _checkCache(p) {
     this._updateUI(true, '正在检查本地歌曲缓存');
     const all = await cherryAll(p);
-    return { site: p.site, setting: p.setting, ...all };
+    return { setting: p.setting, ...all };
   }
 
   async _downloadCache(res) {

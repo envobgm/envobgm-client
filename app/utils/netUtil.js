@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch';
+import { macAddr as getMacAddr } from './custUtil';
 
 /**
  * 使用Promise封装Fetch，具有网络超时、请求终止的功能
@@ -6,14 +7,12 @@ import fetch from 'isomorphic-fetch';
 class NetUtil {
   static baseUrl = (function getBaseUrl() {
     if (process.env.NODE_ENV === 'production') {
-      return 'http://47.100.161.213:10080'; // 生产
+      return 'http://47.103.63.249'; // 生产
     }
-    if (process.env.NODE_ENV === 'development') {
-      return 'http://47.100.161.213:10080'; // 测试
-    }
+    return 'http://47.103.63.249'; // 测试
   })();
 
-  static token = '';
+  static xMac;
 
   /**
    * post请求
@@ -21,11 +20,15 @@ class NetUtil {
    * data : 参数(Json对象)
    * callback : 回调函数
    * */
-  static fetchRequest(url, method, params) {
+  static async fetchRequest(url, method, params) {
+    if (!NetUtil.xMac) {
+      NetUtil.xMac = await getMacAddr();
+    }
+
     const header = {
       Accept: 'application/json',
       'Content-Type': 'application/json;charset=UTF-8',
-      accesstoken: NetUtil.token
+      'X-Mac': NetUtil.xMac
     };
     let promise = null;
     if (typeof method === 'undefined') {

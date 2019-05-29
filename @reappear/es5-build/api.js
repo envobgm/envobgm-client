@@ -1,4 +1,4 @@
-/* eslint-disable no-void,no-underscore-dangle,import/order */
+/* eslint-disable import/order,no-void */
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
@@ -27,11 +27,15 @@ const debug = require('debug')('api');
  * @returns {Promise<void>}
  */
 
-const active = async function active(activeCode) {
-  const mac = await (0, _custUtil.macAddr)();
+const active = async function active(licence) {
+  const macAddr = await (0, _custUtil.macAddr)();
   const res = await _netUtil.default.fetchRequest(
-    '/siteapi/'.concat(mac, '/active/').concat(activeCode),
-    _netUtil.default.PUT
+    '/envo/api/v1/brandStore/active',
+    _netUtil.default.PATCH,
+    {
+      licence,
+      macAddr
+    }
   );
   debug('active请求结果：', res);
   return res;
@@ -45,13 +49,13 @@ const active = async function active(activeCode) {
 exports.active = active;
 
 const getDailyPlan = async function getDailyPlan(specDate) {
-  const mac = await (0, _custUtil.macAddr)();
   const date = (0, _moment.default)(specDate).format('YYYY-MM-DD');
   const res = await _netUtil.default.fetchRequest(
-    '/siteapi/'.concat(mac, '/playerInfo?date=').concat(date)
+    '/envo/api/v1/brandStore/playInfo?date='.concat(date)
   );
   debug('getDailyPlan请求结果：', res);
-  return res.content.dailyPlan;
+  const dailyPlan = res.data;
+  return dailyPlan;
 };
 /**
  * 获取STS
@@ -61,13 +65,12 @@ const getDailyPlan = async function getDailyPlan(specDate) {
 exports.getDailyPlan = getDailyPlan;
 
 const getSTS = async function getSTS() {
-  const mac = await (0, _custUtil.macAddr)();
   const res = await _netUtil.default.fetchRequest(
-    '/ossapi/requestDownloadAK/'.concat(mac),
-    _netUtil.default.POST
+    '/envo/api/v1/brandStore/sts'
   );
   debug('getSTS请求结果：', res);
-  return res.content.token;
+  res.data.region = 'oss-cn-shanghai';
+  return res.data;
 };
 /**
  * 更新播放计划
