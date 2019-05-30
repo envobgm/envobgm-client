@@ -11,15 +11,7 @@
  *
  * @flow
  */
-import {
-  app,
-  BrowserWindow,
-  globalShortcut,
-  ipcMain,
-  Menu,
-  nativeImage,
-  Tray
-} from 'electron';
+import { app, BrowserWindow, globalShortcut, ipcMain, Menu, nativeImage, Tray } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import log from 'electron-log';
@@ -100,7 +92,11 @@ app.on('ready', async () => {
       show: false,
       frame: false,
       width: 1024,
-      height: 728
+      height: 728,
+      webPreferences: {
+        nodeIntegration: true,
+        nodeIntegrationInWorker: true
+      }
     });
 
     mainWindow.loadURL(`file://${__dirname}/app.html`);

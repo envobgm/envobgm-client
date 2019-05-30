@@ -69,3 +69,8 @@ export const updateDailyPlan = async date => {
   debug('缓存检查结果：', allUncached);
   return allUncached;
 };
+
+export const reportToPortal = async info => {
+  // @TODO: 实时报告播放器信息
+  debug(info);
+};

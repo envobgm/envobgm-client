@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<html>
+  <body>
+    <p>
+      计数器:
+      <output id="result"></output>
+    </p>
+    <button onclick="startWorker()">Start Worker</button>
+    <button onclick="stopWorker()">Stop Worker</button>
+    <br /><br />
+    <script>
+      var w;
+
+      function startWorker() {
+        if (typeof Worker !== 'undefined') {
+          //判断Worker api 支持否
+          if (typeof w == 'undefined') {
+            //w变量必须是未定义过的，重复点击对消息的接收并不会产生影响，即使你手速再快。
+            w = new Worker('demo_workers.js'); //创建worker对象 括号内填url<br>               //注意文件引入路径，如果是在同级文件js文件夹里，则 w=new Worker("./js/demo_workers.js");
+          }
+          w.onmessage = function(event) {
+            //html5提供的postMessage和onMessage这一对方法来在不同的文档页或者不同的工作线程之间进行通信。onmessage作用是接收消息
+            document.getElementById('result').innerHTML = event.data; //event为对应的事件，postMessage发送出来的i值在该对象的data属性中。<br>　　　　　　　　　　　console.log('触发w')
+            w.postMessage('thank you');
+          };
+        } else {
+          document.getElementById('result').innerHTML =
+            'Sorry, your browser does not support Web Workers...';
+        }
+      }
+
+      function stopWorker() {
+        w.terminate(); //终止接收，此时js文件中的i值就卡在了如下图的13，断开接收它就自动暂停执行timeCount，停止该JS文件内的线程。然后下次再重新计数时，引入文件i又重置为0.
+      }
+    </script>
+  </body>
+</html>
