@@ -19,11 +19,12 @@ import os from 'os';
 import MenuBuilder from './menu';
 import ipcs from './constants/ipcs';
 import tray from './constants/tray';
+import logs from './log';
 
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
-    autoUpdater.logger = log;
+    autoUpdater.logger = logs.clientUpdateLog();
     // @see: https://blog.csdn.net/Wonder233/article/details/80563236
     autoUpdater.checkForUpdatesAndNotify();
   }

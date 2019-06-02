@@ -1,6 +1,32 @@
 <!DOCTYPE html>
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript">
+  const BrowserErrorLog = require('../log/browserErrorLog').default;
+  const log = new BrowserErrorLog();
+  /**
+   * @param {String} errorMessage  错误信息
+   * @param {String} scriptURI   出错的文件
+   * @param {Long}  lineNumber   出错代码的行号
+   * @param {Long}  columnNumber  出错代码的列号
+   * @param {Object} errorObj    错误的详细信息，Anything
+   */
+  window.onerror = function(
+    errorMessage,
+    scriptURI,
+    lineNumber,
+    columnNumber,
+    errorObj
+  ) {
+    log.debug('__START__');
+    log.debug('错误信息：', errorMessage);
+    log.debug('出错文件：', scriptURI);
+    log.debug('出错行号：', lineNumber);
+    log.debug('出错列号：', columnNumber);
+    log.debug('错误详情：', errorObj);
+    log.debug('__END__\n');
+  };
+</script>
 <html>
   <body>
     <p>
@@ -12,6 +38,8 @@
     <br /><br />
     <script>
       var w;
+
+      throw new Error('occured error');
 
       function startWorker() {
         if (typeof Worker !== 'undefined') {
