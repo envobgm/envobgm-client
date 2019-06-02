@@ -106,8 +106,8 @@ export default class Home extends Component {
 
   // 加载缓存的UI
   loadCacheUI = () => {
+    const { loading, loadingText } = this.state;
     if (this._startProcessManager) {
-      const { loading, loadingText } = this.state;
       const execDownload = this._startProcessManager._execDownload;
       if (loading) {
         return (
@@ -130,6 +130,18 @@ export default class Home extends Component {
         </div>
       );
     }
+    return (
+      <div
+        tabIndex="0"
+        role="button"
+        onClick={() => window.location.reload()}
+        onKeyDown={null}
+        className={st.leftTopBtnsGroup}
+      >
+        <Icon className={st.leftTopBtnStyle} type="sync" />
+        <span className={st.loadingText}>重新启动</span>
+      </div>
+    );
   };
 
   render() {

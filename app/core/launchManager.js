@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle,no-await-in-loop,no-restricted-syntax,class-methods-use-this */
 import moment from 'moment';
-import { message } from 'antd/lib/index';
 import { getDailyPlan, getSTS } from '../api/index';
 import nedb from '../utils/dbUtil';
 import DownloadManager from '../download/downloadManager';
@@ -148,21 +147,20 @@ export default class LaunchManager {
       return;
     }
     if (navigator.onLine) {
-      try {
-        this._updateUI(true, '正在更新');
-        doJob(moment(), async (percent, done, finishedItem) => {
-          if (done) {
-            this._updateUI(false, '更新完成');
-            await this.run();
-          } else {
-            // 边下边播，成功缓存一首歌曲则加入播放列表
-            this._musicSchedule._playlistManager.updatePlaylist(finishedItem);
-            this._updateUI(true, `更新进度${percent}%`);
-          }
-        });
-      } catch (e) {
-        message.error(e);
-      }
+      this._updateUI(true, '正在更新');
+      doJob(moment(), async (percent, done, finishedItem) => {
+        if (done) {
+          this._updateUI(false, '更新完成');
+          await this.run();
+        } else {
+          // 边下边播，成功缓存一首歌曲则加入播放列表
+          this._musicSchedule._playlistManager.updatePlaylist(finishedItem);
+          this._updateUI(true, `更新进度${percent}%`);
+        }
+      }).catch(e => {
+        debug('更新失败：', e);
+        this._updateUI(false, '更新失败，请重试');
+      });
     } else {
       this._updateUI(false, '未连接网络，请检查或重新操作');
     }
