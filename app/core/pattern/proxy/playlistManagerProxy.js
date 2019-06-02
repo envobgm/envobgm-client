@@ -107,7 +107,7 @@ export default function proxy(playlists, setting) {
         autoplay: false,
         onload: this._onLoad.bind(this),
         onplay: this._onPlay.bind(this),
-        onend: this._onEnd.bind(this),
+        onend: handleEnd.bind(this),
         onpause: this._onPause.bind(this),
         onstop: this._onStop.bind(this)
       });
@@ -115,6 +115,16 @@ export default function proxy(playlists, setting) {
     }
     return this._music;
   }
+
+  function handleEnd() {
+    debug(proxy.METHOD_END);
+    this._onEnd();
+    setSong.apply(this);
+    (function completeFinalMusic() {
+      if (isFinal) isFinal = false;
+    }.apply(this));
+  }
+
   return new Proxy(new PlaylistManager(playlists, setting), {
     get(o, k) {
       switch (k) {
@@ -131,16 +141,16 @@ export default function proxy(playlists, setting) {
             const play = o[k];
             play.apply(o);
           };
-        case proxy.METHOD_END:
-          debug(proxy.METHOD_END);
-          return () => {
-            const end = o[k];
-            end.apply(o);
-            setSong.apply(o);
-            (function completeFinalMusic() {
-              if (isFinal) isFinal = false;
-            }.apply(o));
-          };
+        // case proxy.METHOD_END:
+        //   debug(proxy.METHOD_END);
+        //   return () => {
+        //     const end = o[k];
+        //     end.apply(o);
+        //     setSong.apply(o);
+        //     (function completeFinalMusic() {
+        //       if (isFinal) isFinal = false;
+        //     }.apply(o));
+        //   };
         case proxy.METHOD_GET_PLAYLIST:
           return () => {
             return findCanPlayList.apply(o);
