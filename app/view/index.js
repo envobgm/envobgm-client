@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { Icon } from 'antd';
 import Debug from 'debug';
 import { Howler } from 'howler';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
+import electronLocalshortcut from 'electron-localshortcut';
 import st from './index.css';
 import logo from '../static/img/logo.svg';
 import Switch from './components/switch';
@@ -16,6 +17,9 @@ import { version } from '../../package';
 import ipcs from '../constants/ipcs';
 
 const debug = Debug('player');
+const { BrowserWindow } = remote;
+
+let controlPanel = null;
 
 export default class Home extends Component {
   constructor(props) {
@@ -104,6 +108,31 @@ export default class Home extends Component {
     ipcRenderer.send(ipcs.HIDE);
   };
 
+  loadSettingPanel = () => {
+    controlPanel = new BrowserWindow({ width: 1000, height: 800 });
+    controlPanel.loadURL('https://youtube.com/');
+
+    controlPanel.webContents.on('did-finish-load', () => {
+      if (!controlPanel) {
+        throw new Error('"controlPanel" is not defined');
+      }
+      if (process.env.START_MINIMIZED) {
+        controlPanel.minimize();
+      } else {
+        controlPanel.show();
+        controlPanel.focus();
+      }
+    });
+
+    controlPanel.on('closed', function() {
+      controlPanel = null;
+    });
+
+    electronLocalshortcut.register(controlPanel, 'Command+W', () => {
+      controlPanel.destroy();
+    });
+  };
+
   // 加载缓存的UI
   loadCacheUI = () => {
     const { loading, loadingText } = this.state;
@@ -163,6 +192,11 @@ export default class Home extends Component {
             {this.loadCacheUI()}
             <div className={st.rightTopBtnsGroup}>
               <span style={{ whiteSpace: 'nowrap' }}>v{version}</span>
+              <Icon
+                onClick={this.loadSettingPanel}
+                className={st.rightTopBtnStyle}
+                type="setting"
+              />
               <Icon
                 onClick={this.onHide}
                 className={st.rightTopBtnStyle}

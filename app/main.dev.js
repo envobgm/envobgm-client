@@ -11,12 +11,12 @@
  *
  * @flow
  */
-import { app, BrowserWindow, globalShortcut, ipcMain, Menu, nativeImage, Tray } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, nativeImage, Tray } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import electronLocalshortcut from 'electron-localshortcut';
 import path from 'path';
 import log from 'electron-log';
 import os from 'os';
-import MenuBuilder from './menu';
 import ipcs from './constants/ipcs';
 import tray from './constants/tray';
 import logs from './log';
@@ -116,8 +116,25 @@ app.on('ready', async () => {
       }
     });
 
-    const menuBuilder = new MenuBuilder(mainWindow);
-    menuBuilder.buildMenu();
+    // const menuBuilder = new MenuBuilder(mainWindow);
+    // menuBuilder.buildMenu();
+
+    (function registerShortcuts() {
+      if (process.platform === 'darwin') {
+        electronLocalshortcut.register(mainWindow, 'Command+Q', () => {
+          app.quit();
+        });
+        electronLocalshortcut.register(mainWindow, 'Command+W', () => {
+          mainWindow.hide();
+          app.dock.hide();
+        });
+      } else {
+        electronLocalshortcut.register(mainWindow, 'Ctrl+F4', () => {
+          mainWindow.hide();
+          Menu.setApplicationMenu(null);
+        });
+      }
+    })();
 
     /**
      * 窗口事件
@@ -143,10 +160,6 @@ app.on('ready', async () => {
         if (DARWIN) {
           app.dock.show();
         }
-        if (WIN32) {
-          const menuBuilder = new MenuBuilder(mainWindow);
-          menuBuilder.buildMenu();
-        }
       });
       appTray.on(tray.RIGHT_CLICK, () => {
         const trayMenu = [
@@ -156,10 +169,6 @@ app.on('ready', async () => {
               mainWindow.show();
               if (DARWIN) {
                 app.dock.show();
-              }
-              if (WIN32) {
-                const menuBuilder = new MenuBuilder(mainWindow);
-                menuBuilder.buildMenu();
               }
             }
           },
@@ -173,24 +182,6 @@ app.on('ready', async () => {
         // 图标的上下文菜单
         const contextMenu = Menu.buildFromTemplate(trayMenu);
         appTray.popUpContextMenu(contextMenu);
-      });
-    })();
-  })();
-
-  /**
-   * 快捷键
-   */
-  (function defineShortcut() {
-    (function mac() {
-      globalShortcut.register('CommandOrControl+3', () => {
-        mainWindow.show();
-        if (DARWIN) {
-          app.dock.show();
-        }
-        if (WIN32) {
-          const menuBuilder = new MenuBuilder(mainWindow);
-          menuBuilder.buildMenu();
-        }
       });
     })();
   })();
