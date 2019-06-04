@@ -104,6 +104,10 @@ export default class Home extends Component {
     ipcRenderer.send(ipcs.HIDE);
   };
 
+  showControlPanel = () => {
+    ipcRenderer.send(ipcs.CREATE_CONTROL_PANEL);
+  };
+
   // 加载缓存的UI
   loadCacheUI = () => {
     const { loading, loadingText } = this.state;
@@ -163,6 +167,11 @@ export default class Home extends Component {
             {this.loadCacheUI()}
             <div className={st.rightTopBtnsGroup}>
               <span style={{ whiteSpace: 'nowrap' }}>v{version}</span>
+              <Icon
+                onClick={this.showControlPanel}
+                className={st.rightTopBtnStyle}
+                type="setting"
+              />
               <Icon
                 onClick={this.onHide}
                 className={st.rightTopBtnStyle}

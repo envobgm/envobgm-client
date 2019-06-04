@@ -1,6 +1,7 @@
 import schedule from 'node-schedule';
 import fs from 'fs';
 import os from 'os';
+import moment from 'moment';
 import path from 'path';
 import nedb from '../utils/dbUtil';
 import { cherryCached, extractTracks } from '../api/cache';
@@ -56,14 +57,22 @@ export async function clearCache() {
 }
 
 /**
- * 定时清除缓存作业，于每月的30号21点执行
+ * 定时清除缓存作业，于每周日12点执行
  */
 export function invokeClearTask() {
-  // 每月的30号晚上9点触发缓存清除任务
+  // 每周日12点触发缓存清除任务
   debug('启动定时清除缓存作业');
-  schedule.scheduleJob('0 0 21 30 * *', async () => {
+  schedule.scheduleJob('0 0 12 * * 7', async () => {
     debug('开始执行清除缓存作业');
     await clearCache();
     debug('清除成功');
   });
+}
+
+export function clearTaskDeadline() {
+  return (
+    moment()
+      .endOf('hour')
+      .unix() * 1000
+  );
 }

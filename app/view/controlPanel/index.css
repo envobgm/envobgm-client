@@ -1,0 +1,41 @@
+.control-panel {
+  padding: 20px;
+}
+
+.control-panel-collapse {
+  height: auto;
+}
+
+.control-panel-collapse-panel {
+  height: auto;
+}
+
+.control-panel-collapse-panel-logger {
+  white-space: pre;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.control-panel-collapse-panel-task {
+  height: auto;
+}
+
+.control-panel-collapse-panel-cache {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.control-panel-collapse-panel-cache-input {
+  width: 70%;
+}
+
+.control-panel-collapse-panel-log {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.control-panel-collapse-panel-log-input {
+  width: 80%;
+}

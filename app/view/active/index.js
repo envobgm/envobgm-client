@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Alert, Button, Input, Row, Spin, Steps } from 'antd';
-import { ipcRenderer } from 'electron';
 import { wait } from '../../utils/custUtil';
 import st from './index.css';
 import GetDB from '../../utils/dbUtil';
@@ -36,7 +35,6 @@ export default class ActivePage extends Component<Props> {
     };
     this.activeCode = null;
     this.wait = wait;
-    ipcRenderer.send('resize', 700, 500);
   }
 
   // 进行每一步的操作

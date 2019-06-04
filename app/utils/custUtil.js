@@ -5,6 +5,14 @@ import os from 'os';
 const macRegExp = /(([a-f0-9]{2}:)|([a-f0-9]{2}-)){5}[a-f0-9]{2}/gi;
 
 /**
+ * 设置网页头
+ * @param title
+ */
+export function setDocTitle(title) {
+  document.title = title;
+}
+
+/**
  * 获取指定URL参数
  * @param paraName
  * @returns {*}

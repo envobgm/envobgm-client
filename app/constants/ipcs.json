@@ -2,5 +2,7 @@
   "HIDE": "hide",
   "CLOSE": "close",
   "RESIZE": "resize",
-  "MAXIMIZE": "maximize"
+  "MAXIMIZE": "maximize",
+  "CREATE_CONTROL_PANEL": "create-control-panel",
+  "PLAY_INFO": "play-info"
 }

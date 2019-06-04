@@ -3,6 +3,7 @@ import moment from 'moment';
 import PlaylistManager from '../../playlistManager';
 import { random } from '../../../utils/custUtil';
 import MusicFactory from '../factory/musicFactory';
+import { log } from '../../../utils/ipcUtil';
 
 const debug = require('debug')('playlistManagerProxy');
 
@@ -22,10 +23,12 @@ export default function proxy(playlists, setting) {
   function setSong() {
     if (songMarks.length === 0) {
       debug('随机队列一轮播放结束');
+      log('随机队列一轮播放结束');
       songMarks = Object.keys(this._playlist);
     }
     mark = songMarks.splice(random(0, songMarks.length), 1);
     debug('歌曲放完了，准备随机放下一首歌曲 ', this._playlist[mark]);
+    log('歌曲放完了，准备随机放下一首歌曲');
   }
 
   /**
@@ -55,6 +58,7 @@ export default function proxy(playlists, setting) {
       return this._playlist;
     }
     debug('当前播放的时段: %s~%s', newPl.startTm, newPl.endTm);
+    log(`当前播放的时段: ${newPl.startTm}~${newPl.endTm}`);
     playlistUUID = newPl.uuid;
     this._playlist = newPl.tracks; // 用新的播放列表替换，并重置索引，避免访问越界。
     setSong.apply(this); // 停止旧播放列表的播放
@@ -131,6 +135,7 @@ export default function proxy(playlists, setting) {
         case proxy.METHOD_STOP:
           debug(proxy.METHOD_STOP);
           return () => {
+            log('停止播放');
             const stop = o[k];
             stop.apply(o);
             setSong.apply(o);
@@ -138,8 +143,24 @@ export default function proxy(playlists, setting) {
         case proxy.METHOD_PLAY:
           debug(proxy.METHOD_PLAY);
           return () => {
+            log(
+              `开始播放 - ${findCanPlayMusic
+                .apply(o)
+                .title.replace('.mp3', '')}`
+            );
             const play = o[k];
             play.apply(o);
+          };
+        case proxy.METHOD_PAUSE:
+          debug(proxy.METHOD_PAUSE);
+          return () => {
+            log(
+              `暂停播放 - ${findCanPlayMusic
+                .apply(o)
+                .title.replace('.mp3', '')}`
+            );
+            const pause = o[k];
+            pause.apply(o);
           };
         // case proxy.METHOD_END:
         //   debug(proxy.METHOD_END);
@@ -173,6 +194,7 @@ export default function proxy(playlists, setting) {
 
 proxy.METHOD_STOP = 'stop';
 proxy.METHOD_PLAY = 'play';
+proxy.METHOD_PAUSE = 'pause';
 proxy.METHOD_END = '_onEnd';
 proxy.METHOD_GET_PLAYLIST = 'findCanPlayList';
 proxy.METHOD_GET_MUSIC = 'findCanPlayMusic';

@@ -21,6 +21,8 @@ import ipcs from './constants/ipcs';
 import tray from './constants/tray';
 import logs from './log';
 
+global.windowManager = {};
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -31,6 +33,7 @@ export default class AppUpdater {
 }
 
 let mainWindow = null;
+let controlPanel = null;
 let appTray = null;
 const iconPath = path.join(__dirname, '..', 'resources', 'icons', '16x16.png');
 const iconPath8x = path.join(
@@ -144,6 +147,24 @@ app.on('ready', async () => {
   })();
 
   /**
+   * 控制面板
+   */
+  function createControlPanel() {
+    if (!controlPanel) {
+      controlPanel = new BrowserWindow({ width: 700, height: 500 });
+      // controlPanel.setParentWindow(mainWindow);
+      controlPanel.webContents.loadURL(`file://${__dirname}/app.html?page=controlPanel`);
+
+      controlPanel.on('closed', () => {
+        controlPanel = null;
+        global.windowManager.controlPanelId = null;
+      });
+
+      global.windowManager.controlPanelId = controlPanel.id;
+    }
+  }
+
+  /**
    * 托盘对象
    */
   (function makeTray() {
@@ -219,6 +240,8 @@ app.on('ready', async () => {
     ipcMain.on(ipcs.HIDE, mainWindow.minimize.bind(mainWindow));
     // 窗口最大化
     ipcMain.on(ipcs.MAXIMIZE, mainWindow.maximize.bind(mainWindow));
+
+    ipcMain.on(ipcs.CREATE_CONTROL_PANEL, createControlPanel.bind(this));
   })();
 
   // Remove this if your app does not use auto updates

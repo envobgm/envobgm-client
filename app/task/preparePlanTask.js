@@ -121,3 +121,15 @@ export async function checkPlan(specDate) {
   debug(`${moment(specDate).format('DD')}号没有新的播放计划`);
   return false;
 }
+
+export function checkTaskDeadline() {
+  return (
+    moment()
+      .weekday(7)
+      .hour(12)
+      .minute(0)
+      .second(0)
+      .millisecond(0)
+      .unix() * 1000
+  );
+}
