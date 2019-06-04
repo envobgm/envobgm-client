@@ -5,6 +5,32 @@ import os from 'os';
 const macRegExp = /(([a-f0-9]{2}:)|([a-f0-9]{2}-)){5}[a-f0-9]{2}/gi;
 
 /**
+ * 获取指定URL参数
+ * @param paraName
+ * @returns {*}
+ */
+export function getUrlParam(paraName) {
+  const url = document.location.toString();
+  const arrObj = url.split('?');
+
+  if (arrObj.length > 1) {
+    const arrPara = arrObj[1].replace('#/', '').split('&');
+    let arr;
+
+    for (let i = 0; i < arrPara.length; i += 1) {
+      arr = arrPara[i].split('=');
+
+      if (arr != null && arr[0] === paraName) {
+        return arr[1];
+      }
+    }
+    return '';
+  }
+
+  return '';
+}
+
+/**
  * 获取随机整数
  * @param max
  * @param min
