@@ -39,8 +39,6 @@
     <script>
       var w;
 
-      throw new Error('occured error');
-
       function startWorker() {
         if (typeof Worker !== 'undefined') {
           //判断Worker api 支持否
@@ -62,6 +60,21 @@
       function stopWorker() {
         w.terminate(); //终止接收，此时js文件中的i值就卡在了如下图的13，断开接收它就自动暂停执行timeCount，停止该JS文件内的线程。然后下次再重新计数时，引入文件i又重置为0.
       }
+    </script>
+    <script>
+      require('./renderer1.js');
+      require('./renderer2.js');
+    </script>
+    <script>
+      const Mousetrap = require('mousetrap');
+
+      Mousetrap.stopCallback = function() {
+        return false;
+      };
+
+      Mousetrap.bind('command+W', function() {
+        return false;
+      });
     </script>
   </body>
 </html>
