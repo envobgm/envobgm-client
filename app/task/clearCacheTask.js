@@ -72,7 +72,11 @@ export function invokeClearTask() {
 export function clearTaskDeadline() {
   return (
     moment()
-      .endOf('hour')
+      .weekday(7)
+      .hour(12)
+      .minute(0)
+      .second(0)
+      .millisecond(0)
       .unix() * 1000
   );
 }

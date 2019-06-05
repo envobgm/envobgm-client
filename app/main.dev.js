@@ -151,9 +151,17 @@ app.on('ready', async () => {
    */
   function createControlPanel() {
     if (!controlPanel) {
-      controlPanel = new BrowserWindow({ width: 700, height: 500 });
+      controlPanel = new BrowserWindow({ width: 700, height: 500, show: false });
       // controlPanel.setParentWindow(mainWindow);
       controlPanel.webContents.loadURL(`file://${__dirname}/app.html?page=controlPanel`);
+
+      controlPanel.webContents.on('did-finish-load', () => {
+        if (!controlPanel) {
+          throw new Error('"controlPanel" is not defined');
+        }
+        controlPanel.show();
+        controlPanel.focus();
+      });
 
       controlPanel.on('closed', () => {
         controlPanel = null;

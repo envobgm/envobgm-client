@@ -125,11 +125,7 @@ export async function checkPlan(specDate) {
 export function checkTaskDeadline() {
   return (
     moment()
-      .weekday(7)
-      .hour(12)
-      .minute(0)
-      .second(0)
-      .millisecond(0)
+      .endOf('hour')
       .unix() * 1000
   );
 }

@@ -14,24 +14,15 @@ const { Search } = Input;
 
 const { Countdown } = Statistic;
 
-let checkDeadline = checkTaskDeadline();
-let cacheDeadline = clearTaskDeadline();
-
-function onCheckFinish() {
-  checkDeadline = checkTaskDeadline();
-}
-
-function onCacheFinish() {
-  cacheDeadline = checkTaskDeadline();
-}
-
 export default class ControlPanel extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       playInfo: `[${moment().format('hh:mm:ss')}]: 初始化成功`,
-      expandIconPosition: 'left'
+      expandIconPosition: 'left',
+      prepareDeadline: checkTaskDeadline(),
+      clearDeadline: clearTaskDeadline()
     };
 
     ipcRenderer.on(ipcs.PLAY_INFO, (event, args) => {
@@ -44,8 +35,21 @@ export default class ControlPanel extends Component {
     setDocTitle('控制面板');
   }
 
+  onPrepareFinish = () => {
+    this.setState({ prepareDeadline: checkTaskDeadline() });
+  };
+
+  onClearFinish = () => {
+    this.setState({ clearDeadline: checkTaskDeadline() });
+  };
+
   render() {
-    const { playInfo, expandIconPosition } = this.state;
+    const {
+      playInfo,
+      expandIconPosition,
+      clearDeadline,
+      prepareDeadline
+    } = this.state;
     return (
       <div className={st['control-panel']}>
         <Collapse
@@ -74,16 +78,16 @@ export default class ControlPanel extends Component {
                 <Col span={12}>
                   <Countdown
                     title="检查次日计划"
-                    value={cacheDeadline}
-                    onFinish={onCacheFinish}
+                    value={prepareDeadline}
+                    onFinish={this.onPrepareFinish}
                     format="HH:mm:ss:SSS"
                   />
                 </Col>
                 <Col span={12}>
                   <Countdown
                     title="清理无效缓存"
-                    value={checkDeadline}
-                    onFinish={onCheckFinish}
+                    value={clearDeadline}
+                    onFinish={this.onClearFinish}
                     format="D 天 H 时 m 分 s 秒"
                   />
                 </Col>
