@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron';
 import schedule from 'node-schedule';
 import moment from 'moment';
 import path from 'path';
@@ -88,13 +89,35 @@ export async function preparePlan() {
 /**
  * 预缓存作业，整点执行一次
  */
+ipcRenderer.on('prepare-task-accept', function(event) {
+  event.sender.send('dispatch-to-control-panel', {
+    taskStatus: false,
+    type: 'prepareTask',
+    timeLeft: prepareTaskDeadline(),
+    msg: '启动定时缓存作业'
+  });
+});
 export function invokePrepareTask() {
   // 整点触发一次
   debug('启动定时预缓存作业');
   schedule.scheduleJob('0 0 * * * *', async () => {
+    ipcRenderer.send('dispatch-to-control-panel', {
+      taskStatus: true,
+      type: 'prepareTask',
+      timeLeft: null,
+      msg: '正在执行缓存作业'
+    });
+
     debug('开始执行预缓存作业');
     await preparePlan();
     debug('缓存成功');
+
+    ipcRenderer.send('dispatch-to-control-panel', {
+      taskStatus: false,
+      type: 'prepareTask',
+      timeLeft: prepareTaskDeadline(),
+      msg: '继续下一轮缓存'
+    });
   });
 }
 
@@ -122,7 +145,7 @@ export async function checkPlan(specDate) {
   return false;
 }
 
-export function checkTaskDeadline() {
+export function prepareTaskDeadline() {
   return (
     moment()
       .endOf('hour')

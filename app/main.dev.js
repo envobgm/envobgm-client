@@ -249,7 +249,21 @@ app.on('ready', async () => {
     // 窗口最大化
     ipcMain.on(ipcs.MAXIMIZE, mainWindow.maximize.bind(mainWindow));
 
+    // 打开控制面板
     ipcMain.on(ipcs.CREATE_CONTROL_PANEL, createControlPanel.bind(this));
+
+    // 定时作业和控制面板之间的进程通讯
+    ipcMain.on('dispatch-to-control-panel', function(event, arg) {
+      event.sender.send('control-panel-accept', arg);
+    });
+
+    ipcMain.on('dispatch-to-prepare-task', function(event, arg) {
+      event.sender.send('prepare-task-accept', arg);
+    });
+
+    ipcMain.on('dispatch-to-clear-task', function(event, arg) {
+      event.sender.send('clear-task-accept', arg);
+    });
   })();
 
   // Remove this if your app does not use auto updates

@@ -3,6 +3,7 @@ import fs from 'fs';
 import os from 'os';
 import moment from 'moment';
 import path from 'path';
+import { ipcRenderer } from 'electron';
 import nedb from '../utils/dbUtil';
 import { cherryCached, extractTracks } from '../api/cache';
 
@@ -57,15 +58,37 @@ export async function clearCache() {
 }
 
 /**
- * 定时清除缓存作业，于每周日12点执行
+ * 定时清理缓存作业，于每周日12点执行
  */
+ipcRenderer.on('clear-task-accept', function(event) {
+  event.sender.send('dispatch-to-control-panel', {
+    taskStatus: false,
+    type: 'clearTask',
+    timeLeft: clearTaskDeadline(),
+    msg: '启动定时清理作业'
+  });
+});
 export function invokeClearTask() {
-  // 每周日12点触发缓存清除任务
-  debug('启动定时清除缓存作业');
+  // 每周日12点触发缓存清理任务
+  debug('启动定时清理缓存作业');
   schedule.scheduleJob('0 0 12 * * 7', async () => {
-    debug('开始执行清除缓存作业');
+    ipcRenderer.send('dispatch-to-control-panel', {
+      taskStatus: true,
+      type: 'clearTask',
+      timeLeft: null,
+      msg: '正在执行清理作业'
+    });
+
+    debug('开始执行清理缓存作业');
     await clearCache();
-    debug('清除成功');
+    debug('清理成功');
+
+    ipcRenderer.send('dispatch-to-control-panel', {
+      taskStatus: false,
+      type: 'clearTask',
+      timeLeft: clearTaskDeadline(),
+      msg: '继续下一轮清理'
+    });
   });
 }
 

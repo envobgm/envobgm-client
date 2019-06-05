@@ -6,25 +6,27 @@ import st from './index.css';
 import ipcs from '../../constants/ipcs';
 import { setDocTitle } from '../../utils/custUtil';
 import { cachePath, logPath, open } from '../../utils/pathUtil';
-import { checkTaskDeadline } from '../../task/preparePlanTask';
-import { clearTaskDeadline } from '../../task/clearCacheTask';
 
 const { Panel } = Collapse;
 const { Search } = Input;
 
 const { Countdown } = Statistic;
 
+const debug = require('debug')('controlPanel');
+
 export default class ControlPanel extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       playInfo: `[${moment().format('hh:mm:ss')}]: 初始化成功`,
       expandIconPosition: 'left',
-      prepareDeadline: checkTaskDeadline(),
-      clearDeadline: clearTaskDeadline()
+      prepareTaskStatus: false,
+      prepareTaskTimeLeft: 0,
+      prepareTaskMsg: '',
+      clearTaskStatus: false,
+      clearTaskTimeLeft: 0,
+      clearTaskMsg: ''
     };
-
     ipcRenderer.on(ipcs.PLAY_INFO, (event, args) => {
       const { playInfo } = this.state;
       this.setState({
@@ -32,23 +34,42 @@ export default class ControlPanel extends Component {
       });
     });
 
+    ipcRenderer.on('control-panel-accept', (event, args) => {
+      debug('接收到来自task的信息：', args);
+      if (args.type === 'prepareTask') {
+        this.setState({
+          prepareTaskStatus: args.taskStatus,
+          prepareTaskTimeLeft: args.timeLeft,
+          prepareTaskMsg: args.msg
+        });
+      }
+
+      if (args.type === 'clearTask') {
+        this.setState({
+          clearTaskStatus: args.taskStatus,
+          clearTaskTimeLeft: args.timeLeft,
+          clearTaskMsg: args.msg
+        });
+      }
+    });
+
+    ipcRenderer.send('dispatch-to-prepare-task', 'ping');
+
+    ipcRenderer.send('dispatch-to-clear-task', 'ping');
+
     setDocTitle('控制面板');
   }
-
-  onPrepareFinish = () => {
-    this.setState({ prepareDeadline: checkTaskDeadline() });
-  };
-
-  onClearFinish = () => {
-    this.setState({ clearDeadline: checkTaskDeadline() });
-  };
 
   render() {
     const {
       playInfo,
       expandIconPosition,
-      clearDeadline,
-      prepareDeadline
+      prepareTaskStatus,
+      prepareTaskTimeLeft,
+      prepareTaskMsg,
+      clearTaskStatus,
+      clearTaskTimeLeft,
+      clearTaskMsg
     } = this.state;
     return (
       <div className={st['control-panel']}>
@@ -76,20 +97,26 @@ export default class ControlPanel extends Component {
             <div className={st['control-panel-collapse-panel-task']}>
               <Row gutter={16}>
                 <Col span={12}>
-                  <Countdown
-                    title="检查次日计划"
-                    value={prepareDeadline}
-                    onFinish={this.onPrepareFinish}
-                    format="HH:mm:ss:SSS"
-                  />
+                  {!prepareTaskStatus ? (
+                    <Countdown
+                      title="检查次日计划"
+                      value={prepareTaskTimeLeft}
+                      format="HH:mm:ss:SSS"
+                    />
+                  ) : (
+                    <span>{prepareTaskMsg}</span>
+                  )}
                 </Col>
                 <Col span={12}>
-                  <Countdown
-                    title="清理无效缓存"
-                    value={clearDeadline}
-                    onFinish={this.onClearFinish}
-                    format="D 天 H 时 m 分 s 秒"
-                  />
+                  {!clearTaskStatus ? (
+                    <Countdown
+                      title="清理无效缓存"
+                      value={clearTaskTimeLeft}
+                      format="D 天 H 时 m 分 s 秒"
+                    />
+                  ) : (
+                    <span>{clearTaskMsg}</span>
+                  )}
                 </Col>
               </Row>
             </div>
