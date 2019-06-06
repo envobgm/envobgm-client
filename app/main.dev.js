@@ -159,18 +159,20 @@ app.on('ready', async () => {
         if (!controlPanel) {
           throw new Error('"controlPanel" is not defined');
         }
-        controlPanel.show();
-        controlPanel.focus();
       });
 
       controlPanel.on('closed', () => {
         controlPanel = null;
         global.windowManager.controlPanelId = null;
+        createControlPanel(); // preload
       });
 
       global.windowManager.controlPanelId = controlPanel.id;
+    } else {
+      controlPanel.show();
     }
   }
+  createControlPanel(); // preload
 
   /**
    * 托盘对象
