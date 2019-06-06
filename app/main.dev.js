@@ -21,6 +21,8 @@ import ipcs from './constants/ipcs';
 import tray from './constants/tray';
 import logs from './log';
 
+// const debug = require('debug')('main.dev');
+
 global.windowManager = {};
 
 export default class AppUpdater {
@@ -34,6 +36,7 @@ export default class AppUpdater {
 
 let mainWindow = null;
 let controlPanel = null;
+let forceQuit = false;
 let appTray = null;
 const iconPath = path.join(__dirname, '..', 'resources', 'icons', '16x16.png');
 const iconPath8x = path.join(
@@ -119,12 +122,18 @@ app.on('ready', async () => {
       }
     });
 
+    mainWindow.on('closed', () => {
+      mainWindow = null;
+    });
+
+
     // const menuBuilder = new MenuBuilder(mainWindow);
     // menuBuilder.buildMenu();
 
     (function registerShortcuts() {
       if (process.platform === 'darwin') {
         electronLocalshortcut.register(mainWindow, 'Command+Q', () => {
+          forceQuit = true;
           app.quit();
         });
         electronLocalshortcut.register(mainWindow, 'Command+W', () => {
@@ -162,6 +171,11 @@ app.on('ready', async () => {
       });
 
       controlPanel.on('closed', () => {
+        if (forceQuit) {
+          controlPanel = null;
+          return;
+        }
+
         controlPanel = null;
         global.windowManager.controlPanelId = null;
         createControlPanel(); // preload
@@ -172,6 +186,7 @@ app.on('ready', async () => {
       controlPanel.show();
     }
   }
+
   createControlPanel(); // preload
 
   /**
