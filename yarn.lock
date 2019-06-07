@@ -40,9 +40,9 @@
   dependencies:
     "@babel/highlight" "^7.0.0"
 
-"@babel/core@>=7.1.0", "@babel/core@^7.0.0", "@babel/core@^7.1.0", "@babel/core@^7.4.0":
+"@babel/manager@>=7.1.0", "@babel/manager@^7.0.0", "@babel/manager@^7.1.0", "@babel/manager@^7.4.0":
   version "7.4.0"
-  resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.4.0.tgz#248fd6874b7d755010bfe61f557461d4f446d9e9"
+  resolved "https://registry.yarnpkg.com/@babel/manager/-/manager-7.4.0.tgz#248fd6874b7d755010bfe61f557461d4f446d9e9"
   integrity sha512-Dzl7U0/T69DFOTwqz/FJdnOSWS57NpjNfCwMKHABr589Lg8uX1RrlBIJ7L5Dubt/xkLsx0xH5EBFzlBVes1ayA==
   dependencies:
     "@babel/code-frame" "^7.0.0"
@@ -415,7 +415,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.0.0"
     "@babel/helper-regex" "^7.0.0"
-    regexpu-core "^4.5.4"
+    regexpu-manager "^4.5.4"
 
 "@babel/plugin-syntax-async-generators@^7.2.0":
   version "7.2.0"
@@ -630,7 +630,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.0.0"
     "@babel/helper-regex" "^7.0.0"
-    regexpu-core "^4.1.3"
+    regexpu-manager "^4.1.3"
 
 "@babel/plugin-transform-duplicate-keys@^7.2.0":
   version "7.2.0"
@@ -854,7 +854,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.0.0"
     "@babel/helper-regex" "^7.0.0"
-    regexpu-core "^4.1.3"
+    regexpu-manager "^4.1.3"
 
 "@babel/preset-env@^7.4.2":
   version "7.4.2"
@@ -902,7 +902,7 @@
     "@babel/plugin-transform-unicode-regex" "^7.2.0"
     "@babel/types" "^7.4.0"
     browserslist "^4.4.2"
-    core-js-compat "^3.0.0"
+    manager-js-compat "^3.0.0"
     invariant "^2.2.2"
     js-levenshtein "^1.1.3"
     semver "^5.3.0"
@@ -931,7 +931,7 @@
   resolved "https://registry.yarnpkg.com/@babel/register/-/register-7.4.0.tgz#d9d0a621db268fb14200f2685a4f8924c822404c"
   integrity sha512-ekziebXBnS/7V6xk8sBfLSSD6YZuy6P29igBtR6OL/tswKdxOV+Yqq0nzICMguVYtGRZYUCGpfGV8J9Za2iBdw==
   dependencies:
-    core-js "^3.0.0"
+    manager-js "^3.0.0"
     find-cache-dir "^2.0.0"
     lodash "^4.17.11"
     mkdirp "^0.5.1"
@@ -1010,7 +1010,7 @@
 
 "@jest/core@^24.5.0":
   version "24.5.0"
-  resolved "https://registry.yarnpkg.com/@jest/core/-/core-24.5.0.tgz#2cefc6a69e9ebcae1da8f7c75f8a257152ba1ec0"
+  resolved "https://registry.yarnpkg.com/@jest/manager/-/manager-24.5.0.tgz#2cefc6a69e9ebcae1da8f7c75f8a257152ba1ec0"
   integrity sha512-RDZArRzAs51YS7dXG1pbXbWGxK53rvUu8mCDYsgqqqQ6uSOaTjcVyBl2Jce0exT2rSLk38ca7az7t2f3b0/oYQ==
   dependencies:
     "@jest/console" "^24.3.0"
@@ -1111,7 +1111,7 @@
   resolved "https://registry.yarnpkg.com/@jest/transform/-/transform-24.5.0.tgz#6709fc26db918e6af63a985f2cc3c464b4cf99d9"
   integrity sha512-XSsDz1gdR/QMmB8UCKlweAReQsZrD/DK7FuDlNo/pE8EcKMrfi2kqLRk8h8Gy/PDzgqJj64jNEzOce9pR8oj1w==
   dependencies:
-    "@babel/core" "^7.1.0"
+    "@babel/manager" "^7.1.0"
     "@jest/types" "^24.5.0"
     babel-plugin-istanbul "^5.1.0"
     chalk "^2.0.1"
@@ -2202,12 +2202,12 @@ babel-code-frame@^6.26.0:
 
 babel-core@7.0.0-bridge.0:
   version "7.0.0-bridge.0"
-  resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
+  resolved "https://registry.yarnpkg.com/babel-manager/-/babel-manager-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
   integrity sha512-poPX9mZH/5CSanm50Q+1toVci6pv5KSRv/5TWCwtzQS5XEwn40BcCrgIeMFWP9CKKIniKXNxoIOnOq4VVlGXhg==
 
 babel-core@^6.22.1, babel-core@^6.26.0:
   version "6.26.3"
-  resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-6.26.3.tgz#b2e2f09e342d0f0c88e2f02e067794125e75c207"
+  resolved "https://registry.yarnpkg.com/babel-manager/-/babel-manager-6.26.3.tgz#b2e2f09e342d0f0c88e2f02e067794125e75c207"
   integrity sha512-6jyFLuDmeidKmUEb3NM+/yawG0M2bDZ9Z1qbZP59cyHLz8kYGKYwpJP0UwUKKUiTRNvxfLesJnTedqczP7cTDA==
   dependencies:
     babel-code-frame "^6.26.0"
@@ -2723,7 +2723,7 @@ babel-plugin-transform-es2015-unicode-regex@^6.22.0:
   dependencies:
     babel-helper-regex "^6.24.1"
     babel-runtime "^6.22.0"
-    regexpu-core "^2.0.0"
+    regexpu-manager "^2.0.0"
 
 babel-plugin-transform-exponentiation-operator@^6.22.0, babel-plugin-transform-exponentiation-operator@^6.24.1:
   version "6.24.1"
@@ -2788,7 +2788,7 @@ babel-polyfill@^6.26.0:
   integrity sha1-N5k3q8Z9eJWXCtxiHyhM2WbPIVM=
   dependencies:
     babel-runtime "^6.26.0"
-    core-js "^2.5.0"
+    manager-js "^2.5.0"
     regenerator-runtime "^0.10.5"
 
 babel-preset-env@^1.1.8:
@@ -2901,9 +2901,9 @@ babel-register@^6.26.0:
   resolved "https://registry.yarnpkg.com/babel-register/-/babel-register-6.26.0.tgz#6ed021173e2fcb486d7acb45c6009a856f647071"
   integrity sha1-btAhFz4vy0htestFxgCahW9kcHE=
   dependencies:
-    babel-core "^6.26.0"
+    babel-manager "^6.26.0"
     babel-runtime "^6.26.0"
-    core-js "^2.5.0"
+    manager-js "^2.5.0"
     home-or-tmp "^2.0.0"
     lodash "^4.17.4"
     mkdirp "^0.5.1"
@@ -2914,7 +2914,7 @@ babel-runtime@6.x, babel-runtime@^6.18.0, babel-runtime@^6.22.0, babel-runtime@^
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   integrity sha1-llxwWGaOgrVde/4E/yM3vItWR/4=
   dependencies:
-    core-js "^2.4.0"
+    manager-js "^2.4.0"
     regenerator-runtime "^0.11.0"
 
 babel-runtime@^5.6.15, babel-runtime@^5.8.34:
@@ -2922,7 +2922,7 @@ babel-runtime@^5.6.15, babel-runtime@^5.8.34:
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-5.8.38.tgz#1c0b02eb63312f5f087ff20450827b425c9d4c19"
   integrity sha1-HAsC62MxL18If/IEUIJ7QlydTBk=
   dependencies:
-    core-js "^1.0.0"
+    manager-js "^1.0.0"
 
 babel-template@^6.24.1, babel-template@^6.26.0:
   version "6.26.0"
@@ -4182,37 +4182,37 @@ copy-to@^2.0.1:
 
 core-js-compat@^3.0.0:
   version "3.0.0"
-  resolved "https://registry.yarnpkg.com/core-js-compat/-/core-js-compat-3.0.0.tgz#cd9810b8000742535a4a43773866185e310bd4f7"
+  resolved "https://registry.yarnpkg.com/manager-js-compat/-/manager-js-compat-3.0.0.tgz#cd9810b8000742535a4a43773866185e310bd4f7"
   integrity sha512-W/Ppz34uUme3LmXWjMgFlYyGnbo1hd9JvA0LNQ4EmieqVjg2GPYbj3H6tcdP2QGPGWdRKUqZVbVKLNIFVs/HiA==
   dependencies:
     browserslist "^4.5.1"
-    core-js "3.0.0"
-    core-js-pure "3.0.0"
+    manager-js "3.0.0"
+    manager-js-pure "3.0.0"
     semver "^5.6.0"
 
 core-js-pure@3.0.0:
   version "3.0.0"
-  resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.0.0.tgz#a5679adb4875427c8c0488afc93e6f5b7125859b"
+  resolved "https://registry.yarnpkg.com/manager-js-pure/-/manager-js-pure-3.0.0.tgz#a5679adb4875427c8c0488afc93e6f5b7125859b"
   integrity sha512-yPiS3fQd842RZDgo/TAKGgS0f3p2nxssF1H65DIZvZv0Od5CygP8puHXn3IQiM/39VAvgCbdaMQpresrbGgt9g==
 
 core-js@2, core-js@^2.4.0, core-js@^2.4.1, core-js@^2.5.0:
   version "2.6.5"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.5.tgz#44bc8d249e7fb2ff5d00e0341a7ffb94fbf67895"
+  resolved "https://registry.yarnpkg.com/manager-js/-/manager-js-2.6.5.tgz#44bc8d249e7fb2ff5d00e0341a7ffb94fbf67895"
   integrity sha512-klh/kDpwX8hryYL14M9w/xei6vrv6sE8gTHDG7/T/+SEovB/G4ejwcfE/CBzO6Edsu+OETZMZ3wcX/EjUkrl5A==
 
 core-js@3.0.0, core-js@^3.0.0:
   version "3.0.0"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.0.0.tgz#a8dbfa978d29bfc263bfb66c556d0ca924c28957"
+  resolved "https://registry.yarnpkg.com/manager-js/-/manager-js-3.0.0.tgz#a8dbfa978d29bfc263bfb66c556d0ca924c28957"
   integrity sha512-WBmxlgH2122EzEJ6GH8o9L/FeoUKxxxZ6q6VUxoTlsE4EvbTWKJb447eyVxTEuq0LpXjlq/kCB2qgBvsYRkLvQ==
 
 core-js@^1.0.0:
   version "1.2.7"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
+  resolved "https://registry.yarnpkg.com/manager-js/-/manager-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
   integrity sha1-ZSKUwUZR2yj6k70tX/KYOk8IxjY=
 
 core-util-is@1.0.2, core-util-is@^1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
-  resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
+  resolved "https://registry.yarnpkg.com/manager-util-is/-/manager-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
 cosmiconfig@^5.0.0, cosmiconfig@^5.0.2, cosmiconfig@^5.0.7:
@@ -6226,10 +6226,10 @@ fbjs-scripts@^1.2.0:
   resolved "https://registry.yarnpkg.com/fbjs-scripts/-/fbjs-scripts-1.2.0.tgz#069a0c0634242d10031c6460ef1fccefcdae8b27"
   integrity sha512-5krZ8T0Bf8uky0abPoCLrfa7Orxd8UH4Qq8hRUF2RZYNMu+FmEOrBc7Ib3YVONmxTXTlLAvyrrdrVmksDb2OqQ==
   dependencies:
-    "@babel/core" "^7.0.0"
+    "@babel/manager" "^7.0.0"
     ansi-colors "^1.0.1"
     babel-preset-fbjs "^3.2.0"
-    core-js "^2.4.1"
+    manager-js "^2.4.1"
     cross-spawn "^5.1.0"
     fancy-log "^1.3.2"
     object-assign "^4.0.1"
@@ -6242,7 +6242,7 @@ fbjs@^0.8.0, fbjs@^0.8.15, fbjs@^0.8.16, fbjs@^0.8.9:
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.17.tgz#c4d598ead6949112653d6588b01a5cdcd9f90fdd"
   integrity sha1-xNWY6taUkRJlPWWIsBpc3Nn5D90=
   dependencies:
-    core-js "^1.0.0"
+    manager-js "^1.0.0"
     isomorphic-fetch "^2.1.1"
     loose-envify "^1.0.0"
     object-assign "^4.1.0"
@@ -8135,7 +8135,7 @@ is-type-of@^1.0.0:
   resolved "https://registry.npm.taobao.org/is-type-of/download/is-type-of-1.2.1.tgz#e263ec3857aceb4f28c47130ec78db09a920f8c5"
   integrity sha1-4mPsOFes608oxHEw7HjbCakg+MU=
   dependencies:
-    core-util-is "^1.0.2"
+    manager-util-is "^1.0.2"
     is-class-hotfix "~0.0.6"
     isstream "~0.1.2"
 
@@ -8319,7 +8319,7 @@ jest-cli@^24.5.0:
   resolved "https://registry.yarnpkg.com/jest-cli/-/jest-cli-24.5.0.tgz#598139d3446d1942fb7dc93944b9ba766d756d4b"
   integrity sha512-P+Jp0SLO4KWN0cGlNtC7JV0dW1eSFR7eRpoOucP2UM0sqlzp/bVHeo71Omonvigrj9AvCKy7NtQANtqJ7FXz8g==
   dependencies:
-    "@jest/core" "^24.5.0"
+    "@jest/manager" "^24.5.0"
     "@jest/test-result" "^24.5.0"
     "@jest/types" "^24.5.0"
     chalk "^2.0.1"
@@ -8338,7 +8338,7 @@ jest-config@^24.5.0:
   resolved "https://registry.yarnpkg.com/jest-config/-/jest-config-24.5.0.tgz#404d1bc6bb81aed6bd1890d07e2dca9fbba2e121"
   integrity sha512-t2UTh0Z2uZhGBNVseF8wA2DS2SuBiLOL6qpLq18+OZGfFUxTM7BzUVKyHFN/vuN+s/aslY1COW95j1Rw81huOQ==
   dependencies:
-    "@babel/core" "^7.1.0"
+    "@babel/manager" "^7.1.0"
     "@jest/types" "^24.5.0"
     babel-jest "^24.5.0"
     chalk "^2.0.1"
@@ -11067,7 +11067,7 @@ postcss-jsx@^0.36.0:
   resolved "https://registry.yarnpkg.com/postcss-jsx/-/postcss-jsx-0.36.0.tgz#b7685ed3d070a175ef0aa48f83d9015bd772c82d"
   integrity sha512-/lWOSXSX5jlITCKFkuYU2WLFdrncZmjSVyNpHAunEgirZXLwI8RjU556e3Uz4mv0WVHnJA9d3JWb36lK9Yx99g==
   dependencies:
-    "@babel/core" ">=7.1.0"
+    "@babel/manager" ">=7.1.0"
 
 postcss-less@^3.1.0:
   version "3.1.4"
@@ -11859,7 +11859,7 @@ rc-dropdown@~2.4.1:
 
 rc-editor-core@~0.8.3:
   version "0.8.9"
-  resolved "https://registry.npm.taobao.org/rc-editor-core/download/rc-editor-core-0.8.9.tgz#f611952c8eed965e3e348d84ae7be885daeb221c"
+  resolved "https://registry.npm.taobao.org/rc-editor-manager/download/rc-editor-manager-0.8.9.tgz#f611952c8eed965e3e348d84ae7be885daeb221c"
   integrity sha1-9hGVLI7tll4+NI2ErnvohdrrIhw=
   dependencies:
     babel-runtime "^6.26.0"
@@ -11882,7 +11882,7 @@ rc-editor-mention@^1.1.7:
     immutable "^3.7.4"
     prop-types "^15.5.8"
     rc-animate "^2.3.0"
-    rc-editor-core "~0.8.3"
+    rc-editor-manager "~0.8.3"
 
 rc-form@^2.4.0:
   version "2.4.5"
@@ -12384,7 +12384,7 @@ read-pkg@^4.0.1:
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.6.tgz#b11c27d88b8ff1fbe070643cf94b0c79ae1b0aaf"
   integrity sha512-tQtKA9WIAhBF3+VLAseyMqZeBjW0AHJoxOtYqSUZNJxauErmLbVm2FW1y+J/YA9dUrAC39ITejlZWhVIwawkKw==
   dependencies:
-    core-util-is "~1.0.0"
+    manager-util-is "~1.0.0"
     inherits "~2.0.3"
     isarray "~1.0.0"
     process-nextick-args "~2.0.0"
@@ -12397,7 +12397,7 @@ readable-stream@1.1.x, readable-stream@~1.1.9:
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-1.1.14.tgz#7cf4c54ef648e3813084c636dd2079e166c081d9"
   integrity sha1-fPTFTvZI44EwhMY23SB54WbAgdk=
   dependencies:
-    core-util-is "~1.0.0"
+    manager-util-is "~1.0.0"
     inherits "~2.0.1"
     isarray "0.0.1"
     string_decoder "~0.10.x"
@@ -12417,7 +12417,7 @@ readable-stream@~2.1.5:
   integrity sha1-ZvqLcg4UOLNkaB8q0aY8YYRIydA=
   dependencies:
     buffer-shims "^1.0.0"
-    core-util-is "~1.0.0"
+    manager-util-is "~1.0.0"
     inherits "~2.0.1"
     isarray "~1.0.0"
     process-nextick-args "~1.0.6"
@@ -12544,7 +12544,7 @@ regexpp@^2.0.1:
 
 regexpu-core@^2.0.0:
   version "2.0.0"
-  resolved "https://registry.yarnpkg.com/regexpu-core/-/regexpu-core-2.0.0.tgz#49d038837b8dcf8bfa5b9a42139938e6ea2ae240"
+  resolved "https://registry.yarnpkg.com/regexpu-manager/-/regexpu-manager-2.0.0.tgz#49d038837b8dcf8bfa5b9a42139938e6ea2ae240"
   integrity sha1-SdA4g3uNz4v6W5pCE5k45uoq4kA=
   dependencies:
     regenerate "^1.2.1"
@@ -12553,7 +12553,7 @@ regexpu-core@^2.0.0:
 
 regexpu-core@^4.1.3, regexpu-core@^4.5.4:
   version "4.5.4"
-  resolved "https://registry.yarnpkg.com/regexpu-core/-/regexpu-core-4.5.4.tgz#080d9d02289aa87fe1667a4f5136bc98a6aebaae"
+  resolved "https://registry.yarnpkg.com/regexpu-manager/-/regexpu-manager-4.5.4.tgz#080d9d02289aa87fe1667a4f5136bc98a6aebaae"
   integrity sha512-BtizvGtFQKGPUcTy56o3nk1bGRp4SZOTYrDtGNlqCQufptV5IkkLN6Emw+yunAJjzf+C9FQFtvq7IoA3+oMYHQ==
   dependencies:
     regenerate "^1.4.0"
@@ -12693,7 +12693,7 @@ replicator@^1.0.3:
 
 request-promise-core@1.1.2:
   version "1.1.2"
-  resolved "https://registry.yarnpkg.com/request-promise-core/-/request-promise-core-1.1.2.tgz#339f6aababcafdb31c799ff158700336301d3346"
+  resolved "https://registry.yarnpkg.com/request-promise-manager/-/request-promise-manager-1.1.2.tgz#339f6aababcafdb31c799ff158700336301d3346"
   integrity sha512-UHYyq1MO8GsefGEt7EprS8UrXsm1TxEvFUX1IMTuSLU2Rh7fTIdFtl8xD7JiEYiWU2dl+NYAjCTksTehQUxPag==
   dependencies:
     lodash "^4.17.11"
@@ -12703,7 +12703,7 @@ request-promise-native@^1.0.5:
   resolved "https://registry.yarnpkg.com/request-promise-native/-/request-promise-native-1.0.7.tgz#a49868a624bdea5069f1251d0a836e0d89aa2c59"
   integrity sha512-rIMnbBdgNViL37nZ1b3L/VfPOpSi0TqVDQPAvO6U14lMzOLrt5nilxCQqtDKhZeDiW0/hkCXGoQjhgJd/tCh6w==
   dependencies:
-    request-promise-core "1.1.2"
+    request-promise-manager "1.1.2"
     stealthy-require "^1.1.1"
     tough-cookie "^2.3.3"
 
@@ -14282,7 +14282,7 @@ testcafe@^1.1.0:
   dependencies:
     "@types/node" "^10.12.19"
     async-exit-hook "^1.1.2"
-    babel-core "^6.22.1"
+    babel-manager "^6.22.1"
     babel-plugin-transform-class-properties "^6.24.1"
     babel-plugin-transform-for-of-as-array "^1.1.1"
     babel-plugin-transform-runtime "^6.22.0"
@@ -15115,7 +15115,7 @@ verror@1.10.0:
   integrity sha1-OhBcoXBTr1XW4nDB+CiGguGNpAA=
   dependencies:
     assert-plus "^1.0.0"
-    core-util-is "1.0.2"
+    manager-util-is "1.0.2"
     extsprintf "^1.2.0"
 
 vfile-location@^2.0.0:

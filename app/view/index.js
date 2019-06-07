@@ -10,8 +10,8 @@ import Switch from './components/switch';
 import Time from './components/time';
 import Progress from './components/progress';
 import Volume from './components/volume';
-import LaunchManager from '../core/launchManager';
-import { Player, player } from '../core/pattern/observer/player';
+import LaunchManager from '../manager/launchManager';
+import { Player, player } from '../manager/pattern/observer/player';
 import { version } from '../../package';
 import ipcs from '../constants/ipcs';
 
