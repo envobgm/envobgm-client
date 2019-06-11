@@ -1,10 +1,8 @@
 /* eslint-disable no-underscore-dangle,no-undef */
+import { Howl } from 'howler';
 import MusicManager from './musicManager';
-import AudioFactory from './pattern/factory/audioFactory';
 
 const debug = require('debug')('scrollAudioManager');
-
-const audioFactory = new AudioFactory();
 
 class ScrollAudioManager extends MusicManager {
   constructor(music) {
@@ -20,7 +18,7 @@ class ScrollAudioManager extends MusicManager {
       const music = this._playlist[0];
       if (!music.howl) {
         debug('localFilePath : %o', music.filePathName);
-        music.howl = audioFactory.createHowl({
+        music.howl = new Howl({
           src: [music.filePathName],
           onplay: this._onPlay.bind(this),
           onend: this._onEnd.bind(this),

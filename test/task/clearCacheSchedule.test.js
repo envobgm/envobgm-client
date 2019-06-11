@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { invokeClearTask } from '../../app/task/clearCacheTask';
+import { invokeClearTask } from '../../app/utils/task/clearCacheTask';
 
 describe('clearCacheSchedule', () => {
   const now = new Date('2019-05-30 20:59:00').getTime();

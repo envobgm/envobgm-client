@@ -54,7 +54,7 @@
 }
 
 .albumart {
-  background: url(../static/img/back.jpeg) no-repeat;
+  background: url(static/back.jpeg) no-repeat;
   background-size: cover;
   height: 70%;
   padding-top: 3px;

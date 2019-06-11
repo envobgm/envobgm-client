@@ -1,9 +1,9 @@
 /* eslint-disable prefer-rest-params */
 import message from 'antd/lib/message';
-import netUtil from '../utils/netUtil';
-import httpStatusCodes from '../constants/http-status-code';
-import routes from '../constants/routes';
-import { history } from '../store/configureStore';
+import netUtil from '../netUtil';
+import httpStatusCodes from '../../constants/http-status-code';
+import routes from '../../constants/routes';
+import { history } from '../../store/configureStore';
 
 const debug = require('debug')('apiProxy');
 

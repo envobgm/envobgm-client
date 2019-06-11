@@ -1,19 +1,19 @@
 /* eslint-disable no-underscore-dangle,no-await-in-loop,no-restricted-syntax,class-methods-use-this */
 import moment from 'moment';
 import { getDailyPlan, getSTS } from '../api/index';
-import nedb from '../utils/dbUtil';
+import nedb from '../dbUtil';
 import DownloadManager from '../download/downloadManager';
 import MusicSchedule from './musicSchedule';
 import doJob from '../download/downloadJob';
 import calcSignedUrl from '../api/signature';
-import routes from '../constants/routes';
+import routes from '../../constants/routes';
 import { cherryAll, extractTracks } from '../api/cache';
 import { invokeClearTask } from '../task/clearCacheTask';
 import { invokePrepareTask } from '../task/preparePlanTask';
 
 const dm = new DownloadManager();
 const debug = require('debug')('startProcessManager');
-const { history } = require('../store/configureStore');
+const { history } = require('../../store/configureStore');
 
 /**
  * @TODO: UI更新这块后面选择用进程通讯的方式来做

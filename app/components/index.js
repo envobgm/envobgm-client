@@ -5,13 +5,12 @@ import Debug from 'debug';
 import { Howler } from 'howler';
 import { ipcRenderer } from 'electron';
 import st from './index.css';
-import logo from '../static/img/logo.svg';
-import Switch from './components/switch';
-import Time from './components/time';
-import Progress from './components/progress';
-import Volume from './components/volume';
-import LaunchManager from '../manager/launchManager';
-import { Player, player } from '../manager/pattern/observer/player';
+import logo from './static/logo.svg';
+import Switch from './common/switch';
+import Time from './common/time';
+import Progress from './common/progress';
+import Volume from './common/volume';
+import LaunchManager from '../utils/manager/launchManager';
 import { version } from '../../package';
 import ipcs from '../constants/ipcs';
 
@@ -33,7 +32,7 @@ export default class Home extends Component {
       loadingText: '检查更新'
     };
 
-    player._publish(Player.RESIZE_HOME_WIN);
+    ipcRenderer.send(ipcs.RESIZE, 500, 270);
   }
 
   componentDidMount() {

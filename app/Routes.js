@@ -3,9 +3,9 @@ import { Switch, Route, Redirect } from 'react-router';
 import routes from './constants/routes';
 import App from './containers/App';
 import { getUrlParam } from './utils/custUtil';
-import HomePage from './view';
-import ActivePage from './view/active';
-import ControlPanelPage from './view/controlPanel';
+import HomePage from './components/index';
+import ActivePage from './components/active';
+import ControlPanelPage from './components/controlPanel';
 
 function redirectPath() {
   const page = getUrlParam('page');

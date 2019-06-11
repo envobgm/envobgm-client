@@ -1,13 +1,11 @@
 /* eslint-disable no-return-assign,no-restricted-syntax */
 import moment from 'moment';
-import PlaylistManager from '../../playlistManager';
-import { random } from '../../../utils/custUtil';
-import MusicFactory from '../factory/musicFactory';
-import { log } from '../../../utils/ipcUtil';
+import { Howl } from 'howler';
+import PlaylistManager from './playlistManager';
+import { random } from '../custUtil';
+import { log } from '../ipcUtil';
 
 const debug = require('debug')('playlistManagerProxy');
-
-const musicFactory = new MusicFactory();
 
 /**
  * 播放列表管理器代理
@@ -106,7 +104,7 @@ export default function proxy(playlists, setting) {
   function findCanPlayMusic() {
     // @前置逻辑交由代理实现，目标方法只管返回歌曲对象
     if (this._music && !this._music.howl) {
-      this._music.howl = musicFactory.createHowl({
+      this._music.howl = new Howl({
         src: [this._music.filePathName],
         autoplay: false,
         onload: this._onLoad.bind(this),

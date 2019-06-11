@@ -19,7 +19,7 @@ import log from 'electron-log';
 import os from 'os';
 import ipcs from './constants/ipcs';
 import tray from './constants/tray';
-import logs from './log';
+import logs from './utils/log';
 
 // const debug = require('debug')('main.dev');
 

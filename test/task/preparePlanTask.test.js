@@ -1,5 +1,8 @@
 import sinon from 'sinon';
-import { checkPlan, invokePrepareTask } from '../../app/task/preparePlanTask';
+import {
+  checkPlan,
+  invokePrepareTask
+} from '../../app/utils/task/preparePlanTask';
 
 describe('preparePlanTask', () => {
   it('test invokePrepareTask', () => {

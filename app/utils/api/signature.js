@@ -1,5 +1,5 @@
 import moment from 'moment';
-import OssUtil from '../utils/ossUtil';
+import OssUtil from '../ossUtil';
 
 export default function calcSignature(dailyPlan, token) {
   const client = new OssUtil(token);

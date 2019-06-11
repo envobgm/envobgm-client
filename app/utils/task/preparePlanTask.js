@@ -6,8 +6,8 @@ import os from 'os';
 import Datastore from 'nedb';
 import fs from 'fs';
 import DownloadManager from '../download/downloadManager';
-import nedb from '../utils/dbUtil';
-import { getDailyPlan, getSTS } from '../api';
+import nedb from '../dbUtil';
+import { getDailyPlan, getSTS } from '../api/index';
 import { cherryUnCached, extractTracks } from '../api/cache';
 import calcSignedUrl from '../api/signature';
 

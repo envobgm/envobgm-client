@@ -45,7 +45,7 @@ if (module.hot) {
     columnNumber,
     errorObj
   ) {
-    const log = require('./log').default.browserErrorLog();
+    const log = require('./utils/log').default.browserErrorLog();
     log.error('__START__');
     log.error('错误信息：', errorMessage);
     log.error('出错文件：', scriptURI);

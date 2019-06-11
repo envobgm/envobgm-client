@@ -1,8 +1,8 @@
 import moment from 'moment';
 import notification from 'antd/lib/notification';
 import calcSignedUrl from './signature';
-import netUtil from '../utils/netUtil';
-import { macAddr as getMacAddr } from '../utils/custUtil';
+import netUtil from '../netUtil';
+import { macAddr as getMacAddr } from '../custUtil';
 import { cherryUnCached, combineAllUnCached } from './cache';
 import rebuildDB from './rebuildDB';
 import ApiProxy from './apiProxy';

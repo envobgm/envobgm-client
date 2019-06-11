@@ -1,5 +1,5 @@
 import DownloadManager from './downloadManager';
-import { updateDailyPlan } from '../api/index';
+import { updateDailyPlan } from '../api';
 
 // const debug = require('debug')('downloadJob');
 

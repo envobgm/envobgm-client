@@ -1,10 +1,8 @@
 import message from 'antd/lib/message';
+import { Howl } from 'howler';
 import MusicManager from './musicManager';
-import MusicFactory from './pattern/factory/musicFactory';
 
 const debug = require('debug')('playlistManager');
-
-const musicFactory = new MusicFactory();
 
 class PlaylistManager extends MusicManager {
   constructor(plan, setting) {
@@ -45,7 +43,7 @@ class PlaylistManager extends MusicManager {
       this._music = song;
     }
     if (this._music && !this._music.howl) {
-      this._music.howl = musicFactory.createHowl({
+      this._music.howl = new Howl({
         src: [this._music.filePathName],
         autoplay: false,
         onload: this._onLoad.bind(this),

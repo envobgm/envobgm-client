@@ -3,7 +3,7 @@ import { Alert, Button, Input, Row, Spin, Steps } from 'antd';
 import { wait } from '../../utils/custUtil';
 import st from './index.css';
 import GetDB from '../../utils/dbUtil';
-import { active } from '../../api';
+import { active } from '../../utils/api/index';
 import { history } from '../../store/configureStore';
 
 // const debug = require('debug')('active');

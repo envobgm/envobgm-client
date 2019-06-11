@@ -1,11 +1,9 @@
 /* eslint-disable no-restricted-syntax,no-underscore-dangle */
 import moment from 'moment';
+import { Howl } from 'howler';
 import MusicManager from './musicManager';
-import AudioFactory from './pattern/factory/audioFactory';
 
 const debug = require('debug')('alarmAudioManager');
-
-const audioFactory = new AudioFactory();
 
 class AlarmAudioManager extends MusicManager {
   constructor(playlist) {
@@ -25,7 +23,7 @@ class AlarmAudioManager extends MusicManager {
       if (diff < 4000) {
         if (!alarmAudio.howl) {
           debug('localFilePath : %o', alarmAudio.filePathName);
-          alarmAudio.howl = audioFactory.createHowl({
+          alarmAudio.howl = new Howl({
             src: [alarmAudio.filePathName],
             onplay: this._onPlay.bind(this),
             onend: this._onEnd.bind(this),

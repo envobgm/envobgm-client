@@ -10,7 +10,7 @@ import MusicManager from './musicManager';
 import AlarmAudioManager from './alarmAudioManager';
 import ScrollAudioManager from './scrollAudioManager';
 // import PlaylistManager from './playlistManager';
-import playlistManagerProxy from './pattern/proxy/playlistManagerProxy';
+import playlistManagerProxy from './playlistManagerProxy';
 
 const debug = Debug('MusicSchedule');
 

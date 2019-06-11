@@ -4,7 +4,7 @@ import os from 'os';
 import moment from 'moment';
 import path from 'path';
 import { ipcRenderer } from 'electron';
-import nedb from '../utils/dbUtil';
+import nedb from '../dbUtil';
 import { cherryCached, extractTracks } from '../api/cache';
 
 const debug = require('debug')('clearCacheTask');
