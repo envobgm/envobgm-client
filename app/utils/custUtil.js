@@ -49,6 +49,21 @@ export function random(max, min) {
 }
 
 /**
+ * 字符串转16进制，无前缀0x
+ * @param str
+ * @returns {string}
+ */
+export function strToHexCharCode(str) {
+  if (str === '') return '';
+  const hexCharCode = [];
+  // hexCharCode.push('0x');
+  for (let i = 0; i < str.length; i += 1) {
+    hexCharCode.push(str.charCodeAt(i).toString(16));
+  }
+  return hexCharCode.join('');
+}
+
+/**
  * 指定时间内造成阻塞
  * @param callback
  * @param ms

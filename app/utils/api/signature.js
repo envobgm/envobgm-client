@@ -27,7 +27,8 @@ export default function calcSignature(dailyPlan, token) {
         .utcOffset(-360)
         .format('HH:mm:ss'),
       uuid: playlist.id,
-      tracks: playlist.tracks.map(({ name, etag, url }) => ({
+      tracks: playlist.tracks.map(({ name, etag, url, id }) => ({
+        uuid: id,
         plUuid: playlist.id,
         title: `${name}.mp3`,
         md5: etag,

@@ -2,7 +2,7 @@
 import moment from 'moment';
 import { Howl } from 'howler';
 import PlaylistManager from './playlistManager';
-import { random } from '../custUtil';
+import { random, macAddr as getMacAddr } from '../custUtil';
 import { log } from '../ipcUtil';
 
 const debug = require('debug')('playlistManagerProxy');
@@ -140,12 +140,20 @@ export default function proxy(playlists, setting) {
           };
         case proxy.METHOD_PLAY:
           debug(proxy.METHOD_PLAY);
-          return () => {
+          return async () => {
             log(
               `开始播放 - ${findCanPlayMusic
                 .apply(o)
                 .title.replace('.mp3', '')}`
             );
+            window.socket.send({
+              data: {
+                macAddr: await getMacAddr(),
+                soundId: findCanPlayMusic.apply(o).uuid,
+                soundType: 'TRACK'
+              },
+              messageType: 'MONITOR_SOUND'
+            });
             const play = o[k];
             play.apply(o);
           };

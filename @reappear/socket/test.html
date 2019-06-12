@@ -1,0 +1,41 @@
+<html>
+  <head> </head>
+  <body>
+    <div>test websocket</div>
+    <button id="send">发送消息</button>
+    <script>
+      function strToHexCharCode(str) {
+        if (str === '') return '';
+        var hexCharCode = [];
+        // hexCharCode.push('0x');
+        for (var i = 0; i < str.length; i += 1) {
+          hexCharCode.push(str.charCodeAt(i).toString(16));
+        }
+        return hexCharCode.join('');
+      }
+    </script>
+    <script>
+      const receiveSocket = new WebSocket('ws://47.103.63.249/ws/brand/7');
+      receiveSocket.addEventListener('message', function(event) {
+        console.log('Message from server ', event.data);
+      });
+
+      receiveSocket.addEventListener('closed', function() {
+        console.log('sendSocket is closed!!!');
+      });
+
+      // const sendSocket = new WebSocket('ws://47.103.63.249/ws/monitor/' + strToHexCharCode('d4:61:9d:17:94:1a'));
+      // const $send = document.getElementById('send');
+      // sendSocket.addEventListener('open', function() {
+      //   $send.addEventListener('click', function() {
+      //     sendSocket.close();
+      //     console.log('closed');
+      //   });
+      // });
+      //
+      // sendSocket.addEventListener('closed', function() {
+      //   console.log('sendSocket is closed!!!');
+      // });
+    </script>
+  </body>
+</html>
