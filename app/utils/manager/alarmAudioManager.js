@@ -2,6 +2,7 @@
 import moment from 'moment';
 import { Howl } from 'howler';
 import MusicManager from './musicManager';
+import { macAddr as getMacAddr } from '../custUtil';
 
 const debug = require('debug')('alarmAudioManager');
 
@@ -31,6 +32,7 @@ class AlarmAudioManager extends MusicManager {
             onstop: this._onStop.bind(this)
           });
         }
+        this._currentMusic = alarmAudio;
         return alarmAudio;
       }
     }
@@ -64,6 +66,22 @@ class AlarmAudioManager extends MusicManager {
     if (!this._isLoading && music && !music.howl.playing()) {
       this._isLoading = true;
       music.howl.play();
+      getMacAddr()
+        .then(mac => {
+          window.socket.send({
+            data: {
+              macAddr: mac,
+              soundId: this._currentMusic.uuid,
+              fileName: this._currentMusic.title,
+              soundType: 'TRACK'
+            },
+            messageType: 'MONITOR_SOUND'
+          });
+          return mac;
+        })
+        .catch(e => {
+          throw e;
+        });
     }
   }
 

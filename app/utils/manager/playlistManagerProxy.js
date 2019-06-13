@@ -150,6 +150,7 @@ export default function proxy(playlists, setting) {
               data: {
                 macAddr: await getMacAddr(),
                 soundId: findCanPlayMusic.apply(o).uuid,
+                fileName: findCanPlayMusic.apply(o).title,
                 soundType: 'TRACK'
               },
               messageType: 'MONITOR_SOUND'

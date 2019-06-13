@@ -40,6 +40,7 @@ export default function calcSignature(dailyPlan, token) {
 
   // 轮播语音
   const scrollAudioMessage = {
+    uuid: audioCarouselConfig.audio.id,
     frequency: audioCarouselConfig.frequency,
     title: `${audioCarouselConfig.audio.name}.mp3`,
     md5: audioCarouselConfig.audio.etag,
@@ -51,9 +52,10 @@ export default function calcSignature(dailyPlan, token) {
   const alarmAudioMessages = audioCutConfigs.map(media => {
     const {
       cutTime,
-      audio: { name, etag, url }
+      audio: { name, etag, url, id }
     } = media;
     return {
+      uuid: id,
       alarmTm: moment(cutTime)
         .utcOffset(-360)
         .format('HH:mm:ss'),

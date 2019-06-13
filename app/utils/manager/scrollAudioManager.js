@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle,no-undef */
 import { Howl } from 'howler';
 import MusicManager from './musicManager';
+import { macAddr as getMacAddr } from '../custUtil';
 
 const debug = require('debug')('scrollAudioManager');
 
@@ -62,6 +63,22 @@ class ScrollAudioManager extends MusicManager {
     if (!this._isLoading && music && !music.howl.playing()) {
       this._isLoading = true;
       music.howl.play();
+      getMacAddr()
+        .then(mac => {
+          window.socket.send({
+            data: {
+              macAddr: mac,
+              soundId: this._currentMusic.uuid,
+              fileName: this._currentMusic.title,
+              soundType: 'TRACK'
+            },
+            messageType: 'MONITOR_SOUND'
+          });
+          return mac;
+        })
+        .catch(e => {
+          throw e;
+        });
     }
   }
 

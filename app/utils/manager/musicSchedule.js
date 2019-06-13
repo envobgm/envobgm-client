@@ -98,18 +98,18 @@ class MusicSchedule extends EventEmitter {
       // 开始播放语音播报， 可能打断_playlistManager的播放
       // 如果插播语音正在播放，则不处理，简化
       if (
-        !this._alarmAudioManager.playing() &&
         !this._scrollAudioManager.playing() &&
         this._alarmAudioManager.findCanPlayMusic()
       ) {
+        this._playlistManager.forcePause(true);
         this._playlistManager.pause();
         this._alarmAudioManager.play();
         return;
       }
+      this._playlistManager.forcePause(false);
 
       if (
         !this._alarmAudioManager.playing() &&
-        !this._scrollAudioManager.playing() &&
         !this._playlistManager.playing() &&
         this._playlistManager.complete() &&
         this._scrollAudioManager.findCanPlayMusic(this._index)
@@ -120,10 +120,8 @@ class MusicSchedule extends EventEmitter {
 
       // 开始播放播放列表中的歌曲
       if (
-        !this._alarmAudioManager.playing() &&
         !this._scrollAudioManager.playing() &&
-        !this._playlistManager.playing() &&
-        this._playlistManager.complete()
+        !this._playlistManager.forcePauseState
       ) {
         this._playlistManager.play();
       }

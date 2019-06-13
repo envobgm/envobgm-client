@@ -10,6 +10,15 @@ class PlaylistManager extends MusicManager {
     super(plan[0].tracks);
     this._setting = setting;
     this._plan = plan;
+    this._forcePauseState = false;
+  }
+
+  get forcePauseState() {
+    return this._forcePauseState;
+  }
+
+  forcePause(state) {
+    this._forcePauseState = state;
   }
 
   /**
