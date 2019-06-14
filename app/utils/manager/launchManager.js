@@ -9,7 +9,7 @@ import calcSignedUrl from '../api/signature';
 import routes from '../../constants/routes';
 import { cherryAll, extractTracks } from '../api/cache';
 import { invokeClearTask } from '../task/clearCacheTask';
-import { invokePrepareTask } from '../task/preparePlanTask';
+import { checkPlan, invokePrepareTask } from '../task/preparePlanTask';
 
 const dm = new DownloadManager();
 const debug = require('debug')('startProcessManager');
@@ -37,6 +37,7 @@ export default class LaunchManager {
   }
 
   async run() {
+    await checkPlan(moment());
     if (nedb.checkDBPath()) {
       const activeCode = await nedb.getActiveCode();
       const playerPlan = await nedb.getPlayerPlan();

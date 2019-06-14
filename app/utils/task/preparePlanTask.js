@@ -66,7 +66,7 @@ export async function preparePlan() {
     const dbPath = path.join(
       os.homedir(),
       '.bgm',
-      `${moment(plan.setting.updateInstant).format('YYYY-MM-DD')}.db`
+      `${planDate.format('YYYY-MM-DD')}.db`
     );
     // 缓存过的就不需要缓存
     if (!fs.existsSync(dbPath)) {
@@ -110,7 +110,6 @@ export function invokePrepareTask() {
 
     debug('开始执行预缓存作业');
     await preparePlan();
-    debug('缓存成功');
 
     ipcRenderer.send('dispatch-to-control-panel', {
       taskStatus: false,
