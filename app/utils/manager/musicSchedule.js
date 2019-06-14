@@ -98,31 +98,47 @@ class MusicSchedule extends EventEmitter {
       // 开始播放语音播报， 可能打断_playlistManager的播放
       // 如果插播语音正在播放，则不处理，简化
       if (
-        !this._scrollAudioManager.playing() &&
+        this._scrollAudioManager.complete() &&
         this._alarmAudioManager.findCanPlayMusic()
       ) {
-        this._playlistManager.forcePause(true);
-        this._playlistManager.pause();
-        this._alarmAudioManager.play();
+        if (!this._alarmAudioManager.playing()) {
+          debug('强制暂停当前播放的音乐，开始播放插播语音');
+          this._playlistManager.forcePausing(true);
+          this._playlistManager.pause();
+          this._alarmAudioManager.play();
+        }
         return;
       }
-      this._playlistManager.forcePause(false);
 
       if (
-        !this._alarmAudioManager.playing() &&
-        !this._playlistManager.playing() &&
+        this._alarmAudioManager.complete() &&
         this._playlistManager.complete() &&
         this._scrollAudioManager.findCanPlayMusic(this._index)
       ) {
-        this._scrollAudioManager.play();
+        if (!this._scrollAudioManager.playing()) {
+          debug('满足轮询次数，开始播放轮播语音');
+          this._scrollAudioManager.play();
+        }
         return;
       }
 
       // 开始播放播放列表中的歌曲
       if (
-        !this._scrollAudioManager.playing() &&
-        !this._playlistManager.forcePauseState
+        this._playlistManager.forcePauseState &&
+        this._alarmAudioManager.complete() &&
+        this._scrollAudioManager.complete()
       ) {
+        // 被强制暂停的状态
+        debug('由于被插播强制暂停，现在恢复音乐播放');
+        this._playlistManager.forcePausing(false);
+        this._playlistManager.play();
+      }
+      if (
+        this._alarmAudioManager.complete() &&
+        this._scrollAudioManager.complete() &&
+        this._playlistManager.complete()
+      ) {
+        debug('音乐播放结束了，开始下一首');
         this._playlistManager.play();
       }
     } else {

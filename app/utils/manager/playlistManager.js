@@ -17,7 +17,7 @@ class PlaylistManager extends MusicManager {
     return this._forcePauseState;
   }
 
-  forcePause(state) {
+  forcePausing(state) {
     this._forcePauseState = state;
   }
 
