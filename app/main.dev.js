@@ -271,7 +271,7 @@ app.on('ready', async () => {
 
     // 定时作业和控制面板之间的进程通讯
     ipcMain.on('dispatch-to-control-panel', function(event, arg) {
-      event.sender.send('control-panel-accept', arg);
+      controlPanel.webContents.send('control-panel-accept', arg);
     });
 
     ipcMain.on('dispatch-to-prepare-task', function(event, arg) {
